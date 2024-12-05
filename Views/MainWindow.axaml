@@ -19,7 +19,7 @@
 		<Grid ColumnDefinitions="Auto,*,Auto" Margin="3" Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch">
 			<TextBlock Text="Folder:" Margin="3" VerticalAlignment="Center" />
 			<TextBox Margin="3" Grid.Column="1" Text="{Binding ImagesFolder, Mode=TwoWay}" ToolTip.Tip="{Binding $self.Text}" HorizontalAlignment="Stretch" Height="24" />
-			<Button Margin="3" Grid.Column="2" Content="Browse" ClickMode="Press" Click="BrowseFolderClick"/>
+			<Button Margin="3" Grid.Column="2" Content="Browse..." ClickMode="Press" Click="BrowseFolderClick"/>
 		</Grid>
 		<Image Margin="3" Grid.Row="2" Grid.Column="0" />
 		<Image Margin="3" Grid.Row="2" Grid.Column="1" />
