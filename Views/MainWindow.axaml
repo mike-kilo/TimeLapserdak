@@ -3,7 +3,8 @@
         xmlns:vm="using:TimeLapserdak.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+		xmlns:local="clr-namespace:TimeLapserdak;assembly=TimeLapserdak"
+        mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="450"
         x:Class="TimeLapserdak.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
@@ -19,11 +20,15 @@
 		<Grid ColumnDefinitions="Auto,*,Auto" Margin="3" Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch">
 			<TextBlock Text="Folder:" Margin="3" VerticalAlignment="Center" />
 			<TextBox Margin="3" Grid.Column="1" Text="{Binding ImagesFolder, Mode=TwoWay}" ToolTip.Tip="{Binding $self.Text}" HorizontalAlignment="Stretch" Height="24" />
-			<Button Margin="3" Grid.Column="2" Content="Browse" ClickMode="Press" Click="BrowseFolderClick"/>
+			<Button Margin="3" Grid.Column="2" Content="Browse..." ClickMode="Press" Click="BrowseFolderClick"/>
 		</Grid>
-		<Image Margin="3" Grid.Row="2" Grid.Column="0" />
-		<Image Margin="3" Grid.Row="2" Grid.Column="1" />
+		<local:ImageControl x:Name="StartingImage" Margin="3" Grid.Row="2" Grid.Column="0" Background="Beige" />
+		<local:ImageControl x:Name="EndingImage" Margin="3" Grid.Row="2" Grid.Column="1" Background="Bisque" />
 		<ProgressBar Margin="3" Height="24" Background="Aqua" Grid.Row="3" Grid.ColumnSpan="2"/>
-		<Button Margin="3" Grid.Row="4" Grid.ColumnSpan="2" Content="Generate" Width="90" HorizontalAlignment="Center" />
+		<Button Margin="3" Grid.Row="4" Grid.ColumnSpan="2" 
+				Content="Generate" 
+				IsEnabled="{Binding ImagesFolder.Length}" 
+				Width="90" 
+				HorizontalAlignment="Center" HorizontalContentAlignment="Center" />
 	</Grid>
 </Window>

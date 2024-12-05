@@ -26,7 +26,7 @@ namespace TimeLapserdak.Views
 
             if (folder.Count > 0)
             {
-                ((MainWindowViewModel)this.DataContext).ImagesFolder = folder.First().Path.LocalPath.ToString();
+                ((MainWindowViewModel)this.DataContext).ImagesFolder = folder[0].Path.LocalPath.ToString();
                 this.InvalidateVisual();
             }
         }
