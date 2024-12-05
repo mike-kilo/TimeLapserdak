@@ -24,6 +24,6 @@
 		<Image Margin="3" Grid.Row="2" Grid.Column="0" />
 		<Image Margin="3" Grid.Row="2" Grid.Column="1" />
 		<ProgressBar Margin="3" Height="24" Background="Aqua" Grid.Row="3" Grid.ColumnSpan="2"/>
-		<Button Margin="3" Grid.Row="4" Grid.ColumnSpan="2" Content="Generate" Width="90" HorizontalAlignment="Center" />
+		<Button Margin="3" Grid.Row="4" Grid.ColumnSpan="2" Content="Generate" Width="90" HorizontalAlignment="Center" HorizontalContentAlignment="Center" />
 	</Grid>
 </Window>
