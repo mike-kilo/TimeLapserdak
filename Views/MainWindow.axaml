@@ -25,6 +25,10 @@
 		<local:ImageControl x:Name="StartingImage" Margin="3" Grid.Row="2" Grid.Column="0" Background="Beige" />
 		<local:ImageControl x:Name="EndingImage" Margin="3" Grid.Row="2" Grid.Column="1" Background="Bisque" />
 		<ProgressBar Margin="3" Height="24" Background="Aqua" Grid.Row="3" Grid.ColumnSpan="2"/>
-		<Button Margin="3" Grid.Row="4" Grid.ColumnSpan="2" Content="Generate" Width="90" HorizontalAlignment="Center" HorizontalContentAlignment="Center" />
+		<Button Margin="3" Grid.Row="4" Grid.ColumnSpan="2" 
+				Content="Generate" 
+				IsEnabled="{Binding ImagesFolder.Length}" 
+				Width="90" 
+				HorizontalAlignment="Center" HorizontalContentAlignment="Center" />
 	</Grid>
 </Window>
