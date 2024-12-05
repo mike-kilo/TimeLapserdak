@@ -8,15 +8,22 @@
              x:Class="TimeLapserdak.ImageControl">
 	<Grid RowDefinitions="*,Auto">
 		<Border ClipToBounds="True" BorderBrush="DarkGray" BorderThickness="1">
-			<Image />
+			<Grid>
+				<Image />
+				<Rectangle Width="{Binding CropWidth}" Height="{Binding CropHeight}" Stroke="Red" StrokeThickness="1" >
+					<Rectangle.RenderTransform>
+						<TranslateTransform X="{Binding OriginX}" Y="{Binding OriginY}" />
+					</Rectangle.RenderTransform>
+				</Rectangle>
+			</Grid>
 		</Border>
 		<Grid Grid.Row="1" ColumnDefinitions="Auto, Auto, 20, Auto, Auto, 20, Auto, Auto">
 			<TextBlock Text="X" Margin="3" VerticalAlignment="Center" />
-			<NumericUpDown Grid.Column="1" Margin="3" Minimum="0" Maximum="1920" Value="{Binding Path=ImageCrop.X}" Width="130" HorizontalContentAlignment="Right" />
+			<NumericUpDown Grid.Column="1" Margin="3" Minimum="0" Maximum="1920" Value="{Binding Path=OriginX}" Width="130" HorizontalContentAlignment="Right" />
 			<TextBlock Grid.Column="3" Text="Y" Margin="3" VerticalAlignment="Center" />
-			<NumericUpDown Grid.Column="4" Margin="3" Minimum="0" Maximum="1080" Value="{Binding Path=ImageCrop.Y}" Width="130" HorizontalContentAlignment="Right" />
+			<NumericUpDown Grid.Column="4" Margin="3" Minimum="0" Maximum="1080" Value="{Binding Path=OriginY}" Width="130" HorizontalContentAlignment="Right" />
 			<TextBlock Grid.Column="6" Text="Height" Margin="3" VerticalAlignment="Center" />
-			<NumericUpDown Grid.Column="7" Margin="3" Minimum="0" Maximum="1080" Value="{Binding Path=ImageCrop.Height}" Width="130" HorizontalContentAlignment="Right" />
+			<NumericUpDown Grid.Column="7" Margin="3" Minimum="0" Maximum="1080" Value="{Binding Path=CropHeight}" Width="130" HorizontalContentAlignment="Right" />
 		</Grid>
 	</Grid>
 </UserControl>
