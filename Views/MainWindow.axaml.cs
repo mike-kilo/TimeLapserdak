@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
+using System.IO;
 using System.Linq;
 using TimeLapserdak.ViewModels;
 
@@ -27,7 +28,11 @@ namespace TimeLapserdak.Views
             if (folder.Count > 0)
             {
                 ((MainWindowViewModel)this.DataContext).ImagesFolder = folder[0].Path.LocalPath.ToString();
-                this.InvalidateVisual();
+                ((MainWindowViewModel)this.DataContext).InputFilesList.Clear();
+                Directory.GetFiles(((MainWindowViewModel)this.DataContext).ImagesFolder, "*.jpg", SearchOption.TopDirectoryOnly)
+                    .Select(f => new FileInfo(f))
+                    .ToList()
+                    .ForEach(f => ((MainWindowViewModel)this.DataContext).InputFilesList.Add(f));
             }
         }
     }
