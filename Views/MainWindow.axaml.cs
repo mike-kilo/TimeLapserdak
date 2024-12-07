@@ -25,14 +25,17 @@ namespace TimeLapserdak.Views
                 AllowMultiple = false,
             });
 
+            var dc = (MainWindowViewModel)this.DataContext;
+            if (dc is null) return;
+
             if (folder.Count > 0)
             {
-                ((MainWindowViewModel)this.DataContext).ImagesFolder = folder[0].Path.LocalPath.ToString();
-                ((MainWindowViewModel)this.DataContext).InputFilesList.Clear();
-                Directory.GetFiles(((MainWindowViewModel)this.DataContext).ImagesFolder, "*.jpg", SearchOption.TopDirectoryOnly)
+                dc.ImagesFolder = folder[0].Path.LocalPath.ToString();
+                dc.InputFilesList.Clear();
+                Directory.GetFiles(dc.ImagesFolder, "*.jpg", SearchOption.TopDirectoryOnly)
                     .Select(f => new FileInfo(f))
                     .ToList()
-                    .ForEach(f => ((MainWindowViewModel)this.DataContext).InputFilesList.Add(f));
+                    .ForEach(f => dc.InputFilesList.Add(f));
             }
         }
     }
