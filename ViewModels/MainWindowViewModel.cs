@@ -1,4 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using Avalonia.Media.Imaging;
+using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 
@@ -26,7 +28,7 @@ namespace TimeLapserdak.ViewModels
             } 
         }
 
-        private ObservableCollection<FileInfo> _inputFilesList = new();
+        private ObservableCollection<FileInfo> _inputFilesList = [];
 
         public ObservableCollection<FileInfo> InputFilesList
         {
@@ -38,5 +40,28 @@ namespace TimeLapserdak.ViewModels
             }
         }
 
+        private Bitmap? _startingImageBinding;
+        
+        public Bitmap? StartingImageBinding 
+        {
+            get => this._startingImageBinding;
+            set 
+            { 
+                this._startingImageBinding = value;
+                OnPropertyChanged(nameof(StartingImageBinding));
+            }
+        }
+
+        private Bitmap? _endingImageBinding;
+
+        public Bitmap? EndingImageBinding
+        {
+            get => this._endingImageBinding;
+            set
+            {
+                this._endingImageBinding = value;
+                OnPropertyChanged(nameof(EndingImageBinding));
+            }
+        }
     }
 }
