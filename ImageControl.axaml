@@ -1,16 +1,15 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:vm="using:TimeLapserdak.ViewModels"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:DataType="vm:ImageControlViewModel"
-             x:Class="TimeLapserdak.ImageControl">
+             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="350"
+             x:Class="TimeLapserdak.ImageControl"
+			 x:CompileBindings="False">
 	<Grid RowDefinitions="*,Auto">
 		<Border ClipToBounds="True" BorderBrush="DarkGray" BorderThickness="1">
 			<Grid>
-				<Image />
-				<Rectangle Width="{Binding CropWidth}" Height="{Binding CropHeight}" Stroke="Red" StrokeThickness="1" >
+				<Image Source="{Binding ImageSource}" />
+				<Rectangle Width="{Binding CropWidth}" Height="{Binding CropHeight}" Stroke="Red" StrokeThickness="1" HorizontalAlignment="Left" VerticalAlignment="Top" >
 					<Rectangle.RenderTransform>
 						<TranslateTransform X="{Binding OriginX}" Y="{Binding OriginY}" />
 					</Rectangle.RenderTransform>
@@ -19,11 +18,11 @@
 		</Border>
 		<Grid Grid.Row="1" ColumnDefinitions="Auto, Auto, 20, Auto, Auto, 20, Auto, Auto">
 			<TextBlock Text="X" Margin="3" VerticalAlignment="Center" />
-			<NumericUpDown Grid.Column="1" Margin="3" Minimum="0" Maximum="1920" Value="{Binding Path=OriginX}" Width="130" HorizontalContentAlignment="Right" />
+			<NumericUpDown Grid.Column="1" Margin="3" Minimum="0" Maximum="1920" FormatString="0" Value="{Binding OriginX}" Width="130" HorizontalContentAlignment="Right" />
 			<TextBlock Grid.Column="3" Text="Y" Margin="3" VerticalAlignment="Center" />
-			<NumericUpDown Grid.Column="4" Margin="3" Minimum="0" Maximum="1080" Value="{Binding Path=OriginY}" Width="130" HorizontalContentAlignment="Right" />
+			<NumericUpDown Grid.Column="4" Margin="3" Minimum="0" Maximum="1080" FormatString="0" Value="{Binding OriginY}" Width="130" HorizontalContentAlignment="Right" />
 			<TextBlock Grid.Column="6" Text="Height" Margin="3" VerticalAlignment="Center" />
-			<NumericUpDown Grid.Column="7" Margin="3" Minimum="0" Maximum="1080" Value="{Binding Path=CropHeight}" Width="130" HorizontalContentAlignment="Right" />
+			<NumericUpDown Grid.Column="7" Margin="3" Minimum="9" Maximum="1080" Increment="9" FormatString="0" Value="{Binding CropHeight}" Width="130" HorizontalContentAlignment="Right" ClipValueToMinMax="True" ParsingNumberStyle="Integer" />
 		</Grid>
 	</Grid>
 </UserControl>

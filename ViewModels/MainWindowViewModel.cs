@@ -1,4 +1,8 @@
-﻿using System.ComponentModel;
+﻿using Avalonia.Media.Imaging;
+using System;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.IO;
 
 namespace TimeLapserdak.ViewModels
 {
@@ -22,6 +26,42 @@ namespace TimeLapserdak.ViewModels
                 _imagesFolder = value;
                 OnPropertyChanged(nameof(ImagesFolder));
             } 
+        }
+
+        private ObservableCollection<FileInfo> _inputFilesList = [];
+
+        public ObservableCollection<FileInfo> InputFilesList
+        {
+            get => this._inputFilesList;
+            set 
+            { 
+                this._inputFilesList = value; 
+                OnPropertyChanged(nameof(InputFilesList));
+            }
+        }
+
+        private Bitmap? _startingImageBinding;
+        
+        public Bitmap? StartingImageBinding 
+        {
+            get => this._startingImageBinding;
+            set 
+            { 
+                this._startingImageBinding = value;
+                OnPropertyChanged(nameof(StartingImageBinding));
+            }
+        }
+
+        private Bitmap? _endingImageBinding;
+
+        public Bitmap? EndingImageBinding
+        {
+            get => this._endingImageBinding;
+            set
+            {
+                this._endingImageBinding = value;
+                OnPropertyChanged(nameof(EndingImageBinding));
+            }
         }
     }
 }
