@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.IO;
 
 namespace TimeLapserdak.ViewModels
 {
@@ -23,5 +25,18 @@ namespace TimeLapserdak.ViewModels
                 OnPropertyChanged(nameof(ImagesFolder));
             } 
         }
+
+        private ObservableCollection<FileInfo> _inputFilesList = new();
+
+        public ObservableCollection<FileInfo> InputFilesList
+        {
+            get => this._inputFilesList;
+            set 
+            { 
+                this._inputFilesList = value; 
+                OnPropertyChanged(nameof(InputFilesList));
+            }
+        }
+
     }
 }
