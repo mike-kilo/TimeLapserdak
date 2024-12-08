@@ -8,21 +8,21 @@
 	<Grid RowDefinitions="*,Auto">
 		<Border ClipToBounds="True" BorderBrush="DarkGray" BorderThickness="1">
 			<Grid>
-				<Image Source="{Binding ImageSource}" />
-				<Rectangle Width="{Binding CropWidth}" Height="{Binding CropHeight}" Stroke="Red" StrokeThickness="1" HorizontalAlignment="Left" VerticalAlignment="Top" >
-					<Rectangle.RenderTransform>
-						<TranslateTransform X="{Binding OriginX}" Y="{Binding OriginY}" />
-					</Rectangle.RenderTransform>
-				</Rectangle>
+				<Border Width="{Binding ElementName=TheImage, Path=Bounds.Width}" Height="{Binding ElementName=TheImage, Path=Bounds.Height}" ZIndex="10" >
+					<Rectangle Width="{Binding CropWidth}" Height="{Binding CropHeight}" Stroke="Red" StrokeThickness="1" HorizontalAlignment="Left" VerticalAlignment="Top" IsHitTestVisible="False" >
+						<Rectangle.RenderTransform>
+							<TranslateTransform X="{Binding OriginX}" Y="{Binding OriginY}" />
+						</Rectangle.RenderTransform>
+					</Rectangle>
+				</Border>
+				<Image x:Name="TheImage" Source="{Binding ImageSource}"
+					   PointerMoved="MouseHoverOverImage" PointerExited="MouseExitedOverImage" />
 			</Grid>
 		</Border>
-		<Grid Grid.Row="1" ColumnDefinitions="Auto, Auto, 20, Auto, Auto, 20, Auto, Auto">
-			<TextBlock Text="X" Margin="3" VerticalAlignment="Center" />
-			<NumericUpDown Grid.Column="1" Margin="3" Minimum="0" Maximum="1920" FormatString="0" Value="{Binding OriginX}" Width="130" HorizontalContentAlignment="Right" />
-			<TextBlock Grid.Column="3" Text="Y" Margin="3" VerticalAlignment="Center" />
-			<NumericUpDown Grid.Column="4" Margin="3" Minimum="0" Maximum="1080" FormatString="0" Value="{Binding OriginY}" Width="130" HorizontalContentAlignment="Right" />
-			<TextBlock Grid.Column="6" Text="Height" Margin="3" VerticalAlignment="Center" />
-			<NumericUpDown Grid.Column="7" Margin="3" Minimum="9" Maximum="1080" Increment="9" FormatString="0" Value="{Binding CropHeight}" Width="130" HorizontalContentAlignment="Right" ClipValueToMinMax="True" ParsingNumberStyle="Integer" />
+		<Grid Grid.Row="1" ColumnDefinitions="*, *, *, 5*">
+			<TextBlock Grid.Column="0" Text="{Binding OriginX, StringFormat=X: {0}}" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Left" />
+			<TextBlock Grid.Column="1" Text="{Binding OriginY, StringFormat=Y: {0}}" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Left" />
+			<TextBlock Grid.Column="2" Text="{Binding CropHeight, StringFormat=Height: {0}}" Margin="3" VerticalAlignment="Center" />
 		</Grid>
 	</Grid>
 </UserControl>

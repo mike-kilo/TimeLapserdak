@@ -11,14 +11,20 @@ namespace TimeLapserdak.Views
 {
     public partial class MainWindow : Window
     {
+        private readonly ImageControl _startingImageControl;
+        private readonly ImageControl _endingImageControl;
+
         public MainWindow()
         {
             InitializeComponent();
+
+            this._startingImageControl = this.FindControl<ImageControl>("StartingImage") ?? new ImageControl();
+            this._endingImageControl = this.FindControl<ImageControl>("EndingImage") ?? new ImageControl();
         }
 
         public async void BrowseFolderClick(object sender, RoutedEventArgs e)
         {
-            var topLevel = TopLevel.GetTopLevel(this);
+            if (TopLevel.GetTopLevel(this) is not TopLevel topLevel) return;
 
             // Start async operation to open the dialog.
             var folder = await topLevel.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
@@ -27,8 +33,7 @@ namespace TimeLapserdak.Views
                 AllowMultiple = false,
             });
 
-            var dc = (MainWindowViewModel)this.DataContext;
-            if (dc is null) return;
+            if (this.DataContext is not MainWindowViewModel dc) return;
 
             dc.StartingImageBinding = null;
             dc.EndingImageBinding = null;
@@ -48,8 +53,12 @@ namespace TimeLapserdak.Views
                 dc.EndingImageBinding = new Bitmap(dc.InputFilesList.Last().FullName);
             }
 
-            this.FindControl<ImageControl>("StartingImage").ImageSource = dc.StartingImageBinding;
-            this.FindControl<ImageControl>("EndingImage").ImageSource = dc.EndingImageBinding;
+            this._startingImageControl.ImageSource = dc.StartingImageBinding;
+            this._endingImageControl.ImageSource = dc.EndingImageBinding;
+        }
+
+        public void GenerateClick(object sender, RoutedEventArgs e)
+        {
         }
     }
 }
