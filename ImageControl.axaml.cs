@@ -4,7 +4,6 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Media.Imaging;
 using System;
-using TimeLapserdak.ViewModels;
 
 namespace TimeLapserdak;
 
