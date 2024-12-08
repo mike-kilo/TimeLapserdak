@@ -56,6 +56,22 @@ public partial class ImageControl : UserControl
     public static readonly StyledProperty<Bitmap?> ImageSourceProperty = 
         AvaloniaProperty.Register<ImageControl, Bitmap?>(nameof(ImageSource), defaultValue: null, defaultBindingMode: BindingMode.OneWay);
 
+    public PixelRect? CroppingBox
+    {
+        get
+        {
+            if (this.ImageSource is not Bitmap b || this.FindControl<Image>("TheImage") is not Image i) return null;
+            var scale = b.Size / i.Bounds.Size;
+
+            return new PixelRect(
+                new PixelPoint((int)Math.Round(this.OriginX * scale.X), (int)Math.Round(this.OriginY * scale.Y)), 
+                new PixelSize((int)Math.Round(this.CropHeight * scale.Y * 16.0 / 9.0), (int)Math.Round(this.CropHeight * scale.Y)));
+        }
+    }
+
+    public static readonly StyledProperty<PixelRect?> CroppingBoxProperty =
+        AvaloniaProperty.Register<ImageControl, PixelRect?>(nameof(CroppingBox), defaultValue: null, defaultBindingMode: BindingMode.OneWay);
+
     #endregion Properties
 
     #region Constructors
