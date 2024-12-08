@@ -15,7 +15,8 @@
 						</Rectangle.RenderTransform>
 					</Rectangle>
 				</Border>
-				<Image x:Name="TheImage" Source="{Binding ImageSource}" />
+				<Image x:Name="TheImage" Source="{Binding ImageSource}"
+					   PointerMoved="MouseHoverOverImage" PointerExited="MouseExitedOverImage" />
 			</Grid>
 		</Border>
 		<Grid Grid.Row="1" ColumnDefinitions="Auto, Auto, 20, Auto, Auto, 20, Auto, Auto">

@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
+using Avalonia.Input;
 using Avalonia.Media.Imaging;
 using System;
 using TimeLapserdak.ViewModels;
@@ -64,5 +65,47 @@ public partial class ImageControl : UserControl
     {
         (o as ImageControl).CropWidth = (int)Math.Round(value * 16.0 / 9.0);
         return value;
+    }
+
+    public void MouseHoverOverImage(object sender, PointerEventArgs args)
+    {
+        var point = args.GetCurrentPoint(sender as Control);
+        var intrPoints = args.GetIntermediatePoints(sender as Control);   
+        var pos = point.Position;
+
+        if (0 <= pos.X - this.OriginX && pos.X - this.OriginX <= this.CropWidth)
+        {
+            if (Math.Abs(pos.Y - this.OriginY - this.CropHeight) <= 10)
+            {
+                this.Cursor = new Cursor(StandardCursorType.SizeNorthSouth);
+                if (point.Properties.IsLeftButtonPressed)
+                {
+                    var pdiff = intrPoints[^1].Position - intrPoints[0].Position;
+                    this.CropHeight += (int)Math.Ceiling(pdiff.Y);
+                }
+
+                return;
+            }
+
+            if (0 <= pos.Y - this.OriginY && pos.Y - this.OriginY <= this.CropHeight)
+            {
+                this.Cursor = new Cursor(StandardCursorType.SizeAll);
+                if (point.Properties.IsLeftButtonPressed) 
+                {
+                    var pdiff = intrPoints[^1].Position - intrPoints[0].Position;
+                    this.OriginX += (int)Math.Round(pdiff.X);
+                    this.OriginY += (int)Math.Round(pdiff.Y);
+                }
+                
+                return;
+            }
+        }
+
+        Cursor = Cursor.Default;
+    }
+
+    public void MouseExitedOverImage(object sender, PointerEventArgs args)
+    { 
+        Cursor = Cursor.Default;
     }
 }
