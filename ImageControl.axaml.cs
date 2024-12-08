@@ -64,8 +64,8 @@ public partial class ImageControl : UserControl
             var scale = b.Size / i.Bounds.Size;
 
             return new PixelRect(
-                new PixelPoint((int)Math.Round(this.OriginX * scale.X), (int)Math.Round(this.OriginY * scale.Y)), 
-                new PixelSize((int)Math.Round(this.CropHeight * scale.Y * 16.0 / 9.0), (int)Math.Round(this.CropHeight * scale.Y)));
+                new PixelPoint((int)Math.Round(scale.X * this.OriginX), (int)Math.Round(scale.Y * this.OriginY)), 
+                new PixelSize((int)Math.Round(scale.Y * this.CropHeight / 9.0) * 16, (int)Math.Round(scale.Y * this.CropHeight / 9.0) * 9));
         }
     }
 
