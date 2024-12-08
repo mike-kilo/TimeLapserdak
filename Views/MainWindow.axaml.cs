@@ -59,6 +59,12 @@ namespace TimeLapserdak.Views
 
         public void GenerateClick(object sender, RoutedEventArgs e)
         {
+            var refAspect = 16.0 / 9.0;
+            var eees = this._startingImageControl.CroppingBox;
+            var sAspect = 1.0 * eees.Value.Width / eees.Value.Height;
+
+            var eeee = this._endingImageControl.CroppingBox;
+            var eAspect = 1.0 * eeee.Value.Width / eeee.Value.Height;
         }
     }
 }
