@@ -48,8 +48,10 @@ namespace TimeLapserdak.Views
                 dc.EndingImageBinding = new Bitmap(dc.InputFilesList.Last().FullName);
             }
 
-            this.FindControl<ImageControl>("StartingImage").ImageSource = dc.StartingImageBinding;
-            this.FindControl<ImageControl>("EndingImage").ImageSource = dc.EndingImageBinding;
+            if (this.FindControl<ImageControl>("StartingImage") is not null)
+                this.FindControl<ImageControl>("StartingImage").ImageSource = dc.StartingImageBinding;
+            if (this.FindControl<ImageControl>("EndingImage") is not null)
+                this.FindControl<ImageControl>("EndingImage").ImageSource = dc.EndingImageBinding;
         }
     }
 }
