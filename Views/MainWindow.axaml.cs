@@ -11,9 +11,15 @@ namespace TimeLapserdak.Views
 {
     public partial class MainWindow : Window
     {
+        private readonly ImageControl _startingImageControl;
+        private readonly ImageControl _endingImageControl;
+
         public MainWindow()
         {
             InitializeComponent();
+
+            this._startingImageControl = this.FindControl<ImageControl>("StartingImage") ?? new ImageControl();
+            this._endingImageControl = this.FindControl<ImageControl>("EndingImage") ?? new ImageControl();
         }
 
         public async void BrowseFolderClick(object sender, RoutedEventArgs e)
@@ -47,10 +53,8 @@ namespace TimeLapserdak.Views
                 dc.EndingImageBinding = new Bitmap(dc.InputFilesList.Last().FullName);
             }
 
-            if (this.FindControl<ImageControl>("StartingImage") is ImageControl si)
-                si.ImageSource = dc.StartingImageBinding;
-            if (this.FindControl<ImageControl>("EndingImage") is ImageControl ei)
-                ei.ImageSource = dc.EndingImageBinding;
+            this._startingImageControl.ImageSource = dc.StartingImageBinding;
+            this._endingImageControl.ImageSource = dc.EndingImageBinding;
         }
     }
 }
