@@ -62,7 +62,7 @@ public partial class ImageControl : UserControl
 
     public static int CropDimesionCoerce(AvaloniaObject o, int value)
     {
-        (o as ImageControl).CropWidth = (int)Math.Round(value * 16.0 / 9.0);
+        if (o is ImageControl ic) ic.CropWidth = (int)Math.Round(value * 16.0 / 9.0);
         return value;
     }
 
