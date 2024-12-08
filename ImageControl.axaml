@@ -8,12 +8,14 @@
 	<Grid RowDefinitions="*,Auto">
 		<Border ClipToBounds="True" BorderBrush="DarkGray" BorderThickness="1">
 			<Grid>
-				<Image Source="{Binding ImageSource}" />
-				<Rectangle Width="{Binding CropWidth}" Height="{Binding CropHeight}" Stroke="Red" StrokeThickness="1" HorizontalAlignment="Left" VerticalAlignment="Top" >
-					<Rectangle.RenderTransform>
-						<TranslateTransform X="{Binding OriginX}" Y="{Binding OriginY}" />
-					</Rectangle.RenderTransform>
-				</Rectangle>
+				<Border Width="{Binding ElementName=TheImage, Path=Bounds.Width}" Height="{Binding ElementName=TheImage, Path=Bounds.Height}" ZIndex="10" >
+					<Rectangle Width="{Binding CropWidth}" Height="{Binding CropHeight}" Stroke="Red" StrokeThickness="1" HorizontalAlignment="Left" VerticalAlignment="Top" IsHitTestVisible="False" >
+						<Rectangle.RenderTransform>
+							<TranslateTransform X="{Binding OriginX}" Y="{Binding OriginY}" />
+						</Rectangle.RenderTransform>
+					</Rectangle>
+				</Border>
+				<Image x:Name="TheImage" Source="{Binding ImageSource}" />
 			</Grid>
 		</Border>
 		<Grid Grid.Row="1" ColumnDefinitions="Auto, Auto, 20, Auto, Auto, 20, Auto, Auto">
