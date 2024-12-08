@@ -56,5 +56,9 @@ namespace TimeLapserdak.Views
             this._startingImageControl.ImageSource = dc.StartingImageBinding;
             this._endingImageControl.ImageSource = dc.EndingImageBinding;
         }
+
+        public void GenerateClick(object sender, RoutedEventArgs e)
+        {
+        }
     }
 }

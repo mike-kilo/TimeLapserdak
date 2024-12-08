@@ -29,6 +29,7 @@
 		<Button Margin="3" Grid.Row="4" Grid.ColumnSpan="2" 
 				Content="Generate" 
 				IsEnabled="{Binding ImagesFolder.Length}" 
+				ClickMode="Press" Click="GenerateClick"
 				Width="90" 
 				HorizontalAlignment="Center" HorizontalContentAlignment="Center" />
 	</Grid>
