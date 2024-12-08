@@ -9,6 +9,8 @@ namespace TimeLapserdak;
 
 public partial class ImageControl : UserControl
 {
+    #region Properties
+
     public int OriginX
     {
         get => (int)GetValue(OriginXProperty);
@@ -54,17 +56,29 @@ public partial class ImageControl : UserControl
     public static readonly StyledProperty<Bitmap?> ImageSourceProperty = 
         AvaloniaProperty.Register<ImageControl, Bitmap?>(nameof(ImageSource), defaultValue: null, defaultBindingMode: BindingMode.OneWay);
 
+    #endregion Properties
+
+    #region Constructors
+
     public ImageControl()
     {
         InitializeComponent();
         this.DataContext = this;
     }
 
+    #endregion Constructors
+
+    #region Coerce methods
+
     public static int CropDimesionCoerce(AvaloniaObject o, int value)
     {
         if (o is ImageControl ic) ic.CropWidth = (int)Math.Round(value * 16.0 / 9.0);
         return value;
     }
+
+    #endregion Coerce methods
+
+    #region Event handlers
 
     public void MouseHoverOverImage(object sender, PointerEventArgs args)
     {
@@ -107,4 +121,6 @@ public partial class ImageControl : UserControl
     { 
         Cursor = Cursor.Default;
     }
+
+    #endregion Event handlers
 }
