@@ -15,24 +15,27 @@
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainWindowViewModel/>
     </Design.DataContext>
-	<Grid ColumnDefinitions="*,*" RowDefinitions="Auto, Auto, *, Auto, Auto">
-		<TextBlock Margin="3" Grid.ColumnSpan="2" Background="AntiqueWhite" />
-		<Grid ColumnDefinitions="Auto,Auto,Auto,*,Auto" Margin="3" Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch">
+	<Grid ColumnDefinitions="*" RowDefinitions="Auto, Auto, *, Auto, Auto">
+		<TextBlock Margin="3" Background="AntiqueWhite" />
+		<Grid ColumnDefinitions="Auto,Auto,Auto,*,Auto" Margin="3" Grid.Row="1" HorizontalAlignment="Stretch" IsEnabled="{Binding !IsBusy, Mode=OneWay}">
 			<Button Margin="3" Grid.Column="0" Content="Browse..." ClickMode="Press" Click="BrowseFolderClick" VerticalAlignment="Center"/>
 			<TextBlock Margin="3" Grid.Column="1" Text="Input folder:" VerticalAlignment="Center" />
 			<TextBlock Margin="3" Grid.Column="2" Text="{Binding ImagesFolder, Mode=TwoWay}" ToolTip.Tip="{Binding $self.Text}" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
 			<TextBlock Margin="3" Grid.Column="4" Text="{Binding InputFilesList.Count, StringFormat=Loaded {0} images}" VerticalAlignment="Center" />
 		</Grid>
-		<local:ImageControl x:Name="StartingImage" Margin="3" Grid.Row="2" Grid.Column="0" />
-		<local:ImageControl x:Name="EndingImage" Margin="3" Grid.Row="2" Grid.Column="1" />
-		<ProgressBar Margin="3" Height="24" FontWeight="DemiBold" Background="Aqua" Grid.Row="3" Grid.ColumnSpan="2" LargeChange="1" 
+		<Grid Grid.Row="2" ColumnDefinitions="*,*" IsEnabled="{Binding !IsBusy, Mode=OneWay}" >
+			<local:ImageControl x:Name="StartingImage" Margin="3" Grid.Row="2" Grid.Column="0" />
+			<local:ImageControl x:Name="EndingImage" Margin="3" Grid.Row="2" Grid.Column="1" />
+		</Grid>
+		<ProgressBar Margin="3" Height="24" FontWeight="DemiBold" Background="Aqua" Grid.Row="3" LargeChange="1" 
 					 Minimum="0" Maximum="{Binding InputFilesList.Count}" Value="{Binding Progress}"
 					 ShowProgressText="True" ProgressTextFormat="Converting pictures, {0}/{3} ({1:0}%) done"/>
-		<Button Margin="3" Grid.Row="4" Grid.ColumnSpan="2" 
-				Content="Generate" 
-				IsEnabled="{Binding ImagesFolder.Length}" 
-				ClickMode="Press" Click="GenerateClick"
-				Width="90" 
-				HorizontalAlignment="Center" HorizontalContentAlignment="Center" />
+		<Grid Margin="3" Grid.Row="4" IsEnabled="{Binding !IsBusy, Mode=OneWay}">
+			<Button IsEnabled="{Binding ImagesFolder.Length, Mode=OneWay}"
+					Content="Generate" 
+					ClickMode="Press" Click="GenerateClick"
+					Width="90" 
+					HorizontalAlignment="Center" HorizontalContentAlignment="Center" />
+		</Grid>
 	</Grid>
 </Window>

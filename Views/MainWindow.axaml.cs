@@ -67,6 +67,7 @@ namespace TimeLapserdak.Views
             var endingCrop = this._endingImageControl.CroppingBox ?? new PixelRect();
 
             if (this.DataContext is not MainWindowViewModel dc) return;
+            dc.IsBusy = true;
             dc.Progress = 0;
 
             var picsCount = dc.InputFilesList.Count;
@@ -92,6 +93,8 @@ namespace TimeLapserdak.Views
                     Dispatcher.UIThread.Invoke(() => dc.Progress++);
                 });
             });
+
+            dc.IsBusy = false;
         }
     }
 }

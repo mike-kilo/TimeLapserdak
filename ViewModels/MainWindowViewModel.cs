@@ -75,5 +75,17 @@ namespace TimeLapserdak.ViewModels
                 OnPropertyChanged(nameof(Progress));
             }
         }
+
+        private bool _isBusy;
+
+        public bool IsBusy
+        {
+            get => this._isBusy;
+            set 
+            { 
+                this._isBusy = value; 
+                OnPropertyChanged(nameof(IsBusy));
+            }
+        }
     }
 }
