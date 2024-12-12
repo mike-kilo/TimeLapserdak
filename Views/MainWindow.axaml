@@ -25,7 +25,9 @@
 		</Grid>
 		<local:ImageControl x:Name="StartingImage" Margin="3" Grid.Row="2" Grid.Column="0" />
 		<local:ImageControl x:Name="EndingImage" Margin="3" Grid.Row="2" Grid.Column="1" />
-		<ProgressBar Margin="3" Height="24" Background="Aqua" Grid.Row="3" Grid.ColumnSpan="2"/>
+		<ProgressBar Margin="3" Height="24" FontWeight="DemiBold" Background="Aqua" Grid.Row="3" Grid.ColumnSpan="2" LargeChange="1" 
+					 Minimum="0" Maximum="{Binding InputFilesList.Count}" Value="{Binding Progress}"
+					 ShowProgressText="True" ProgressTextFormat="Converting pictures, {0}/{3} ({1:0}%) done"/>
 		<Button Margin="3" Grid.Row="4" Grid.ColumnSpan="2" 
 				Content="Generate" 
 				IsEnabled="{Binding ImagesFolder.Length}" 

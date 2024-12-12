@@ -63,5 +63,17 @@ namespace TimeLapserdak.ViewModels
                 OnPropertyChanged(nameof(EndingImageBinding));
             }
         }
+
+        private int _progress = 0;
+
+        public int Progress
+        {
+            get => this._progress; 
+            set 
+            { 
+                this._progress = value; 
+                OnPropertyChanged(nameof(Progress));
+            }
+        }
     }
 }
