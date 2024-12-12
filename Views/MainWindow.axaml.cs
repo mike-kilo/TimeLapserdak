@@ -1,8 +1,9 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
-using Avalonia.Platform;
 using Avalonia.Platform.Storage;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using TimeLapserdak.ViewModels;
@@ -59,6 +60,21 @@ namespace TimeLapserdak.Views
 
         public void GenerateClick(object sender, RoutedEventArgs e)
         {
+            var startingCrop = this._startingImageControl.CroppingBox ?? new PixelRect();
+            var endingCrop = this._endingImageControl.CroppingBox ?? new PixelRect();
+
+            if (this.DataContext is not MainWindowViewModel dc) return;
+
+            var picsCount = dc.InputFilesList.Count;
+            var positionStep = (endingCrop.Position - startingCrop.Position).ToPoint(picsCount);
+            var sizeStep = new PixelSize(endingCrop.Width - startingCrop.Width, endingCrop.Height - startingCrop.Height).ToSize(picsCount);
+            List<PixelRect> crops = Enumerable.Range(0, picsCount)
+                .Select(n => new PixelRect(
+                    startingCrop.Position + PixelPoint.FromPoint(positionStep, n), 
+                    PixelSize.FromSize(new Size(
+                        (startingCrop.Height + sizeStep.Height * n) * 16.0 / 9.0, 
+                        startingCrop.Height + sizeStep.Height * n), 1.0)))
+                .ToList();
         }
     }
 }
