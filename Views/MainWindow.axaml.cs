@@ -88,6 +88,7 @@ namespace TimeLapserdak.Views
                 .ToList()
                 .ForEach(i =>
                 {
+                    ImageProcessing.CropAndResizePictures(i.File, i.Crop, tempFolder);
                     Dispatcher.UIThread.Invoke(() => dc.Progress++);
                 });
             });
