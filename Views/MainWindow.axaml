@@ -7,7 +7,7 @@
         mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="450"
         x:Class="TimeLapserdak.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/avalonia-logo.ico"
+        Icon="/Assets/TimeLapserdak.ico"
         Title="TimeLapserdak">
 
     <Design.DataContext>
