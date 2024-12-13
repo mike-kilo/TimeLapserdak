@@ -1,4 +1,4 @@
-<Window xmlns="https://github.com/avaloniaui"
+﻿<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:TimeLapserdak.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -16,16 +16,33 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 	<Grid ColumnDefinitions="*" RowDefinitions="Auto, Auto, *, Auto, Auto">
-		<TextBlock Margin="3" Background="AntiqueWhite" />
+		<Border Margin="3" BorderBrush="DarkGray" BorderThickness="1" Background="LightYellow">
+			<Grid ColumnDefinitions="*,2*">
+				<TextBlock Margin="3" VerticalAlignment="Center" >
+					<Run FontWeight="DemiBold">Time lapse / hyperlapse generator</Run>
+				</TextBlock>
+				<TextBlock Margin="3" Grid.Column="1" >
+					<Run>Usage: </Run>
+					<LineBreak />
+					<Run>① select the folder containing the pictures series (jpg)</Run>
+					<LineBreak />
+					<Run>② adjust cropping frame of the starting and ending images</Run>
+					<LineBreak />
+					<Run>③ press "Generate" and wait for results</Run>
+				</TextBlock>
+			</Grid>
+		</Border>
 		<Grid ColumnDefinitions="Auto,Auto,Auto,*,Auto" Margin="3" Grid.Row="1" HorizontalAlignment="Stretch" IsEnabled="{Binding !IsBusy, Mode=OneWay}">
 			<Button Margin="3" Grid.Column="0" Content="Browse..." ClickMode="Press" Click="BrowseFolderClick" VerticalAlignment="Center"/>
 			<TextBlock Margin="3" Grid.Column="1" Text="Input folder:" VerticalAlignment="Center" />
 			<TextBlock Margin="3" Grid.Column="2" Text="{Binding ImagesFolder, Mode=TwoWay}" ToolTip.Tip="{Binding $self.Text}" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
 			<TextBlock Margin="3" Grid.Column="4" Text="{Binding InputFilesList.Count, StringFormat=Loaded {0} images}" VerticalAlignment="Center" />
 		</Grid>
-		<Grid Grid.Row="2" ColumnDefinitions="*,*" IsEnabled="{Binding !IsBusy, Mode=OneWay}" >
-			<local:ImageControl x:Name="StartingImage" Margin="3" Grid.Row="2" Grid.Column="0" />
-			<local:ImageControl x:Name="EndingImage" Margin="3" Grid.Row="2" Grid.Column="1" />
+		<Grid Grid.Row="2" ColumnDefinitions="*,*" RowDefinitions="Auto,*" IsEnabled="{Binding !IsBusy, Mode=OneWay}" >
+			<TextBlock Text="Starting image" Margin="3" />
+			<TextBlock Text="Ending image" Margin="3" Grid.Column="1" />
+			<local:ImageControl x:Name="StartingImage" Margin="3" Grid.Row="1" Grid.Column="0" />
+			<local:ImageControl x:Name="EndingImage" Margin="3" Grid.Row="1" Grid.Column="1" />
 		</Grid>
 		<ProgressBar Margin="3" Height="24" FontWeight="DemiBold" Background="Aqua" Grid.Row="3" LargeChange="1" 
 					 Minimum="0" Maximum="{Binding InputFilesList.Count}" Value="{Binding Progress}"
