@@ -77,7 +77,7 @@ namespace TimeLapserdak.Views
                 .Select(n => new PixelRect(
                     startingCrop.Position + PixelPoint.FromPoint(positionStep, n), 
                     PixelSize.FromSize(new Size(
-                        (startingCrop.Height + sizeStep.Height * n) * 16.0 / 9.0, 
+                        (startingCrop.Height + sizeStep.Height * n) * ImageControl.ImageAspectRatio, 
                         startingCrop.Height + sizeStep.Height * n), 1.0)))
                 .ToList();
 

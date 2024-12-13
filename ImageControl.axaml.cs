@@ -11,6 +11,8 @@ public partial class ImageControl : UserControl
 {
     #region Properties
 
+    public static double ImageAspectRatio => 16.0 / 9.0;
+
     public double OriginX
     {
         get => (double)GetValue(OriginXProperty);
@@ -65,7 +67,7 @@ public partial class ImageControl : UserControl
 
             return new PixelRect(
                 new PixelPoint((int)Math.Round(scale.X * this.OriginX), (int)Math.Round(scale.Y * this.OriginY)), 
-                new PixelSize((int)Math.Round(scale.Y * this.CropHeight / 9.0) * 16, (int)Math.Round(scale.Y * this.CropHeight / 9.0) * 9));
+                new PixelSize((int)Math.Floor(scale.Y * this.CropHeight * ImageAspectRatio), (int)Math.Floor(scale.Y * this.CropHeight)));
         }
     }
 
@@ -104,8 +106,8 @@ public partial class ImageControl : UserControl
     public static double CropHeightCoerce(AvaloniaObject o, double value)
     {
         if (o is not ImageControl ic || ic.GetControl<Image>(nameof(TheImage)) is not Image im) return value;
-        var height = Math.Min(Math.Max(0, value), Math.Min(im.DesiredSize.Height - ic.OriginY, (im.DesiredSize.Width - ic.OriginX) / 16.0 * 9.0));
-        ic.CropWidth = height * 16.0 / 9.0;
+        var height = Math.Min(Math.Max(0, value), Math.Min(im.DesiredSize.Height - ic.OriginY, (im.DesiredSize.Width - ic.OriginX) / ImageAspectRatio));
+        ic.CropWidth = height * ImageAspectRatio;
         return height;
     }
 
