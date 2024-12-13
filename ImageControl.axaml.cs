@@ -18,7 +18,7 @@ public partial class ImageControl : UserControl
     }
 
     public static readonly StyledProperty<double> OriginXProperty =
-        AvaloniaProperty.Register<ImageControl, double>(nameof(OriginX), defaultValue: 10, defaultBindingMode: BindingMode.TwoWay);
+        AvaloniaProperty.Register<ImageControl, double>(nameof(OriginX), defaultValue: 10, defaultBindingMode: BindingMode.TwoWay, coerce: OriginXCoerce);
 
     public double OriginY
     {
@@ -27,7 +27,7 @@ public partial class ImageControl : UserControl
     }
 
     public static readonly StyledProperty<double> OriginYProperty =
-        AvaloniaProperty.Register<ImageControl, double>(nameof(OriginY), defaultValue: 10, defaultBindingMode: BindingMode.TwoWay);
+        AvaloniaProperty.Register<ImageControl, double>(nameof(OriginY), defaultValue: 10, defaultBindingMode: BindingMode.TwoWay, coerce: OriginYCoerce);
 
     public double CropWidth
     {
@@ -92,6 +92,16 @@ public partial class ImageControl : UserControl
         return value;
     }
 
+    public static double OriginXCoerce(AvaloniaObject o, double value) =>
+        (o is ImageControl ic && ic.GetControl<Image>(nameof(TheImage)) is Image im) ? 
+        Math.Min(Math.Max(0, value), im.DesiredSize.Width - ic.CropWidth) : 
+        value;
+
+    public static double OriginYCoerce(AvaloniaObject o, double value) => 
+        (o is ImageControl ic && ic.GetControl<Image>(nameof(TheImage)) is Image im) ? 
+        Math.Min(Math.Max(0, value), im.DesiredSize.Height - ic.CropHeight) : 
+        value;
+
     #endregion Coerce methods
 
     #region Event handlers
@@ -125,7 +135,7 @@ public partial class ImageControl : UserControl
                     this.OriginX += pdiff.X;
                     this.OriginY += pdiff.Y;
                 }
-                
+
                 return;
             }
         }
