@@ -36,7 +36,7 @@ public partial class ImageControl : UserControl
     }
 
     public static readonly StyledProperty<double> CropWidthProperty =
-        AvaloniaProperty.Register<ImageControl, double>(nameof(CropWidth), defaultValue: 160, defaultBindingMode: BindingMode.TwoWay);
+        AvaloniaProperty.Register<ImageControl, double>(nameof(CropWidth), defaultValue: 160, defaultBindingMode: BindingMode.TwoWay, coerce: CropWidthCoerce);
 
     public double CropHeight
     {
@@ -45,7 +45,7 @@ public partial class ImageControl : UserControl
     }
 
     public static readonly StyledProperty<double> CropHeightProperty =
-        AvaloniaProperty.Register<ImageControl, double>(nameof(CropHeight), defaultValue: 90, defaultBindingMode: BindingMode.TwoWay, coerce: CropDimesionCoerce);
+        AvaloniaProperty.Register<ImageControl, double>(nameof(CropHeight), defaultValue: 90, defaultBindingMode: BindingMode.TwoWay, coerce: CropHeightCoerce);
 
     public Bitmap? ImageSource
     {
@@ -86,12 +86,6 @@ public partial class ImageControl : UserControl
 
     #region Coerce methods
 
-    public static double CropDimesionCoerce(AvaloniaObject o, double value)
-    {
-        if (o is ImageControl ic) ic.CropWidth = value * 16.0 / 9.0;
-        return value;
-    }
-
     public static double OriginXCoerce(AvaloniaObject o, double value) =>
         (o is ImageControl ic && ic.GetControl<Image>(nameof(TheImage)) is Image im) ? 
         Math.Min(Math.Max(0, value), im.DesiredSize.Width - ic.CropWidth) : 
@@ -101,6 +95,19 @@ public partial class ImageControl : UserControl
         (o is ImageControl ic && ic.GetControl<Image>(nameof(TheImage)) is Image im) ? 
         Math.Min(Math.Max(0, value), im.DesiredSize.Height - ic.CropHeight) : 
         value;
+
+    public static double CropWidthCoerce(AvaloniaObject o, double value) =>
+        (o is ImageControl ic && ic.GetControl<Image>(nameof(TheImage)) is Image im) ?
+        Math.Min(Math.Max(0, value), im.DesiredSize.Width - ic.OriginX) :
+        value;
+
+    public static double CropHeightCoerce(AvaloniaObject o, double value)
+    {
+        if (o is not ImageControl ic || ic.GetControl<Image>(nameof(TheImage)) is not Image im) return value;
+        var height = Math.Min(Math.Max(0, value), Math.Min(im.DesiredSize.Height - ic.OriginY, (im.DesiredSize.Width - ic.OriginX) / 16.0 * 9.0));
+        ic.CropWidth = height * 16.0 / 9.0;
+        return height;
+    }
 
     #endregion Coerce methods
 
