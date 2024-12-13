@@ -77,7 +77,7 @@ namespace TimeLapserdak.Views
                 .Select(n => new PixelRect(
                     startingCrop.Position + PixelPoint.FromPoint(positionStep, n), 
                     PixelSize.FromSize(new Size(
-                        (startingCrop.Height + sizeStep.Height * n) * 16.0 / 9.0, 
+                        (startingCrop.Height + sizeStep.Height * n) * ImageControl.ImageAspectRatio, 
                         startingCrop.Height + sizeStep.Height * n), 1.0)))
                 .ToList();
 
@@ -85,9 +85,7 @@ namespace TimeLapserdak.Views
             Directory.CreateDirectory(tempFolder);
             await Task.Run(() =>
             {
-                dc.InputFilesList.Zip(crops, (f, c) => new { File = f, Crop = c })
-                .ToList()
-                .ForEach(i =>
+                Parallel.ForEach(dc.InputFilesList.Zip(crops, (f, c) => new { File = f, Crop = c }).ToList(), (i) =>
                 {
                     ImageProcessing.CropAndResizePictures(i.File, i.Crop, tempFolder);
                     Dispatcher.UIThread.Invoke(() => dc.Progress++);

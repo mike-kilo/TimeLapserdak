@@ -11,41 +11,43 @@ public partial class ImageControl : UserControl
 {
     #region Properties
 
-    public int OriginX
+    public static double ImageAspectRatio => 16.0 / 9.0;
+
+    public double OriginX
     {
-        get => (int)GetValue(OriginXProperty);
+        get => (double)GetValue(OriginXProperty);
         set => SetValue(OriginXProperty, value);
     }
 
-    public static readonly StyledProperty<int> OriginXProperty =
-        AvaloniaProperty.Register<ImageControl, int>(nameof(OriginX), defaultValue: 10, defaultBindingMode: BindingMode.TwoWay);
+    public static readonly StyledProperty<double> OriginXProperty =
+        AvaloniaProperty.Register<ImageControl, double>(nameof(OriginX), defaultValue: 10, defaultBindingMode: BindingMode.TwoWay, coerce: OriginXCoerce);
 
-    public int OriginY
+    public double OriginY
     {
-        get => (int)GetValue(OriginYProperty);
+        get => (double)GetValue(OriginYProperty);
         set => SetValue(OriginYProperty, value);
     }
 
-    public static readonly StyledProperty<int> OriginYProperty =
-        AvaloniaProperty.Register<ImageControl, int>(nameof(OriginY), defaultValue: 10, defaultBindingMode: BindingMode.TwoWay);
+    public static readonly StyledProperty<double> OriginYProperty =
+        AvaloniaProperty.Register<ImageControl, double>(nameof(OriginY), defaultValue: 10, defaultBindingMode: BindingMode.TwoWay, coerce: OriginYCoerce);
 
-    public int CropWidth
+    public double CropWidth
     {
-        get => (int)GetValue(CropWidthProperty);
+        get => (double)GetValue(CropWidthProperty);
         set => SetValue(CropWidthProperty, value);
     }
 
-    public static readonly StyledProperty<int> CropWidthProperty =
-        AvaloniaProperty.Register<ImageControl, int>(nameof(CropWidth), defaultValue: 160, defaultBindingMode: BindingMode.TwoWay);
+    public static readonly StyledProperty<double> CropWidthProperty =
+        AvaloniaProperty.Register<ImageControl, double>(nameof(CropWidth), defaultValue: 160, defaultBindingMode: BindingMode.TwoWay, coerce: CropWidthCoerce);
 
-    public int CropHeight
+    public double CropHeight
     {
-        get => (int)GetValue(CropHeightProperty);
+        get => (double)GetValue(CropHeightProperty);
         set => SetValue(CropHeightProperty, value);
     }
 
-    public static readonly StyledProperty<int> CropHeightProperty =
-        AvaloniaProperty.Register<ImageControl, int>(nameof(CropHeight), defaultValue: 90, defaultBindingMode: BindingMode.TwoWay, coerce: CropDimesionCoerce);
+    public static readonly StyledProperty<double> CropHeightProperty =
+        AvaloniaProperty.Register<ImageControl, double>(nameof(CropHeight), defaultValue: 90, defaultBindingMode: BindingMode.TwoWay, coerce: CropHeightCoerce);
 
     public Bitmap? ImageSource
     {
@@ -65,7 +67,7 @@ public partial class ImageControl : UserControl
 
             return new PixelRect(
                 new PixelPoint((int)Math.Round(scale.X * this.OriginX), (int)Math.Round(scale.Y * this.OriginY)), 
-                new PixelSize((int)Math.Round(scale.Y * this.CropHeight / 9.0) * 16, (int)Math.Round(scale.Y * this.CropHeight / 9.0) * 9));
+                new PixelSize((int)Math.Floor(scale.Y * this.CropHeight * ImageAspectRatio), (int)Math.Floor(scale.Y * this.CropHeight)));
         }
     }
 
@@ -86,10 +88,27 @@ public partial class ImageControl : UserControl
 
     #region Coerce methods
 
-    public static int CropDimesionCoerce(AvaloniaObject o, int value)
+    public static double OriginXCoerce(AvaloniaObject o, double value) =>
+        (o is ImageControl ic && ic.GetControl<Image>(nameof(TheImage)) is Image im) ? 
+        Math.Min(Math.Max(0, value), im.DesiredSize.Width - ic.CropWidth) : 
+        value;
+
+    public static double OriginYCoerce(AvaloniaObject o, double value) => 
+        (o is ImageControl ic && ic.GetControl<Image>(nameof(TheImage)) is Image im) ? 
+        Math.Min(Math.Max(0, value), im.DesiredSize.Height - ic.CropHeight) : 
+        value;
+
+    public static double CropWidthCoerce(AvaloniaObject o, double value) =>
+        (o is ImageControl ic && ic.GetControl<Image>(nameof(TheImage)) is Image im) ?
+        Math.Min(Math.Max(0, value), im.DesiredSize.Width - ic.OriginX) :
+        value;
+
+    public static double CropHeightCoerce(AvaloniaObject o, double value)
     {
-        if (o is ImageControl ic) ic.CropWidth = (int)Math.Round(value * 16.0 / 9.0);
-        return value;
+        if (o is not ImageControl ic || ic.GetControl<Image>(nameof(TheImage)) is not Image im) return value;
+        var height = Math.Min(Math.Max(0, value), Math.Min(im.DesiredSize.Height - ic.OriginY, (im.DesiredSize.Width - ic.OriginX) / ImageAspectRatio));
+        ic.CropWidth = height * ImageAspectRatio;
+        return height;
     }
 
     #endregion Coerce methods
@@ -110,7 +129,7 @@ public partial class ImageControl : UserControl
                 if (point.Properties.IsLeftButtonPressed)
                 {
                     var pdiff = intrPoints[^1].Position - intrPoints[0].Position;
-                    this.CropHeight += (int)Math.Ceiling(pdiff.Y);
+                    this.CropHeight += pdiff.Y;
                 }
 
                 return;
@@ -122,10 +141,10 @@ public partial class ImageControl : UserControl
                 if (point.Properties.IsLeftButtonPressed) 
                 {
                     var pdiff = intrPoints[^1].Position - intrPoints[0].Position;
-                    this.OriginX += (int)Math.Round(pdiff.X);
-                    this.OriginY += (int)Math.Round(pdiff.Y);
+                    this.OriginX += pdiff.X;
+                    this.OriginY += pdiff.Y;
                 }
-                
+
                 return;
             }
         }
