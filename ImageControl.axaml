@@ -15,7 +15,7 @@
 						</Rectangle.RenderTransform>
 					</Rectangle>
 				</Border>
-				<Image x:Name="TheImage" Source="{Binding ImageSource}"
+				<Image x:Name="TheImage" Source="{Binding ImageSource}" SizeChanged="ImageSizeChanged"
 					   PointerMoved="MouseHoverOverImage" PointerExited="MouseExitedOverImage" />
 			</Grid>
 		</Border>

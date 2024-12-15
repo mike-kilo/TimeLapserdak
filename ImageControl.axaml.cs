@@ -160,5 +160,11 @@ public partial class ImageControl : UserControl
         Cursor = Cursor.Default;
     }
 
+    public void ImageSizeChanged(object sender, SizeChangedEventArgs args)
+    {
+        this.OriginX = this.OriginX;
+        this.OriginY = this.OriginY;
+    }
+
     #endregion Event handlers
 }
