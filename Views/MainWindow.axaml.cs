@@ -4,8 +4,10 @@ using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
+using FFMpegCore.Extensions.SkiaSharp;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -94,6 +96,28 @@ namespace TimeLapserdak.Views
                     Dispatcher.UIThread.Invoke(() => dc.PicturesProgress++);
                 });
             });
+
+
+            if (Directory.GetFiles(tempFolder, "*.jpg", SearchOption.TopDirectoryOnly).Select(f => new FileInfo(f)).ToList() is List<FileInfo> tmpFiles)
+            {
+                dc.VideoProgress = 0;
+                dc.IsVideoConverting = true;
+
+                if (ImageProcessing.CreateFrames(tmpFiles) is IEnumerable<BitmapVideoFrameWrapper> frames)
+                {
+                    var converted = await ImageProcessing.GenerateVideo(frames, Path.GetDirectoryName(dc.InputFilesList[0].FullName) ?? Path.GetTempPath());
+
+                    Debug.WriteLine($"Conversion succeeded? {converted}");
+                    if(converted)
+                    {
+                        Directory.Delete(tempFolder, true);
+                    }
+
+                }
+        
+                dc.IsVideoConverting = false;
+                dc.VideoProgress = 1;
+            }
 
             dc.IsBusy = false;
         }
