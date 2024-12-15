@@ -1,5 +1,6 @@
 ﻿using Avalonia;
 using FFMpegCore;
+using FFMpegCore.Enums;
 using FFMpegCore.Extensions.SkiaSharp;
 using FFMpegCore.Pipes;
 using SkiaSharp;
@@ -46,7 +47,12 @@ namespace TimeLapserdak
                 .OutputToFile(
                     Path.Combine(outputFolder, "TimeLapserdak." + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".mp4"), 
                     overwrite: true, 
-                    options => options.WithVideoCodec("mpeg4").UsingMultithreading(true).WithVideoBitrate(3500).WithSpeedPreset(FFMpegCore.Enums.Speed.UltraFast))
+                    options => options.WithVideoCodec(VideoCodec.LibX264)
+                        .UsingMultithreading(true)
+                        .WithConstantRateFactor(28)
+                        .WithVariableBitrate(5)
+                        .WithFastStart()
+                        .WithSpeedPreset(Speed.UltraFast))
                 .ProcessAsynchronously();
 
             return success;
