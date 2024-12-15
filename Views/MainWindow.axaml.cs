@@ -69,7 +69,7 @@ namespace TimeLapserdak.Views
 
             if (this.DataContext is not MainWindowViewModel dc) return;
             dc.IsBusy = true;
-            dc.Progress = 0;
+            dc.PicturesProgress = 0;
 
             var picsCount = dc.InputFilesList.Count;
             var positionStep = (endingCrop.Position - startingCrop.Position).ToPoint(picsCount);
@@ -89,7 +89,7 @@ namespace TimeLapserdak.Views
                 Parallel.ForEach(dc.InputFilesList.Zip(crops, (f, c) => new { File = f, Crop = c }).ToList(), (i) =>
                 {
                     ImageProcessing.CropAndResizePictures(i.File, i.Crop, tempFolder);
-                    Dispatcher.UIThread.Invoke(() => dc.Progress++);
+                    Dispatcher.UIThread.Invoke(() => dc.PicturesProgress++);
                 });
             });
 

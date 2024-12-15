@@ -1,4 +1,4 @@
-﻿<Window xmlns="https://github.com/avaloniaui"
+<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:TimeLapserdak.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -45,7 +45,7 @@
 			<local:ImageControl x:Name="EndingImage" Margin="3" Grid.Row="1" Grid.Column="1" />
 		</Grid>
 		<ProgressBar Margin="3" Height="24" FontWeight="DemiBold" Background="Aqua" Grid.Row="3" LargeChange="1" 
-					 Minimum="0" Maximum="{Binding InputFilesList.Count}" Value="{Binding Progress}"
+					 Minimum="0" Maximum="{Binding InputFilesList.Count}" Value="{Binding PicturesProgress}"
 					 ShowProgressText="True" ProgressTextFormat="Converting pictures, {0}/{3} ({1:0}%) done"/>
 		<Grid Margin="3" Grid.Row="4" IsEnabled="{Binding !IsBusy, Mode=OneWay}">
 			<Button IsEnabled="{Binding ImagesFolder.Length, Mode=OneWay}"

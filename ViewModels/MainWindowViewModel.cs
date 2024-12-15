@@ -1,4 +1,4 @@
-﻿using Avalonia.Media.Imaging;
+using Avalonia.Media.Imaging;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -64,15 +64,15 @@ namespace TimeLapserdak.ViewModels
             }
         }
 
-        private int _progress = 0;
+        private int _picturesProgress = 0;
 
-        public int Progress
+        public int PicturesProgress
         {
-            get => this._progress; 
+            get => this._picturesProgress; 
             set 
             { 
-                this._progress = value; 
-                OnPropertyChanged(nameof(Progress));
+                this._picturesProgress = value; 
+                OnPropertyChanged(nameof(PicturesProgress));
             }
         }
 
