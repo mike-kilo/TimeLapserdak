@@ -46,8 +46,9 @@ namespace TimeLapserdak.Views
             {
                 dc.ImagesFolder = folder[0].Path.LocalPath.ToString();
                 dc.InputFilesList.Clear();
-                Directory.GetFiles(dc.ImagesFolder, "*.jpg", SearchOption.TopDirectoryOnly)
-                    .Select(f => new FileInfo(f))
+                Directory.GetFiles(dc.ImagesFolder, "*.jpg", SearchOption.TopDirectoryOnly)?
+                    .OrderBy(f => f)
+                    .Select(f => new FileInfo(f))?
                     .ToList()
                     .ForEach(f => dc.InputFilesList.Add(f));
 
