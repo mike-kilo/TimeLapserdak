@@ -41,6 +41,8 @@ namespace TimeLapserdak.Views
 
             dc.StartingImageBinding = null;
             dc.EndingImageBinding = null;
+            dc.PicturesProgress = 0;
+            dc.VideoProgress = 0;
 
             if (folder.Count > 0)
             {

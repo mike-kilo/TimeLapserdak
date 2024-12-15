@@ -1,4 +1,4 @@
-using Avalonia.Media.Imaging;
+﻿using Avalonia.Media.Imaging;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -85,6 +85,30 @@ namespace TimeLapserdak.ViewModels
             { 
                 this._isBusy = value; 
                 OnPropertyChanged(nameof(IsBusy));
+            }
+        }
+
+        private bool _isVideoConverting;
+
+        public bool IsVideoConverting
+        {
+            get => _isVideoConverting;
+            set 
+            { 
+                this._isVideoConverting = value;
+                OnPropertyChanged(nameof(IsVideoConverting));
+            }
+        }
+
+        private int _videoProgress = 0;
+
+        public int VideoProgress
+        {
+            get => this._videoProgress;
+            set
+            {
+                this._videoProgress = value;
+                OnPropertyChanged(nameof(VideoProgress));
             }
         }
     }

@@ -1,4 +1,4 @@
-<Window xmlns="https://github.com/avaloniaui"
+﻿<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:TimeLapserdak.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -15,7 +15,7 @@
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainWindowViewModel/>
     </Design.DataContext>
-	<Grid ColumnDefinitions="*" RowDefinitions="Auto, Auto, *, Auto, Auto">
+	<Grid ColumnDefinitions="*" RowDefinitions="Auto, Auto, *, Auto, Auto, Auto">
 		<Border Margin="3" BorderBrush="DarkGray" BorderThickness="1" Background="LightYellow">
 			<Grid ColumnDefinitions="*,2*">
 				<TextBlock Margin="3" VerticalAlignment="Center" >
@@ -47,7 +47,10 @@
 		<ProgressBar Margin="3" Height="24" FontWeight="DemiBold" Background="Aqua" Grid.Row="3" LargeChange="1" 
 					 Minimum="0" Maximum="{Binding InputFilesList.Count}" Value="{Binding PicturesProgress}"
 					 ShowProgressText="True" ProgressTextFormat="Converting pictures, {0}/{3} ({1:0}%) done"/>
-		<Grid Margin="3" Grid.Row="4" IsEnabled="{Binding !IsBusy, Mode=OneWay}">
+		<ProgressBar Margin="3" Height="24" FontWeight="DemiBold" Background="Aqua" Grid.Row="4" 
+					 IsIndeterminate="{Binding IsVideoConverting}" Value="{Binding VideoProgress}" Maximum="1" 
+					 ShowProgressText="{Binding IsVideoConverting}" ProgressTextFormat="Generating video, please wait..."/>
+		<Grid Margin="3" Grid.Row="5" IsEnabled="{Binding !IsBusy, Mode=OneWay}">
 			<Button IsEnabled="{Binding ImagesFolder.Length, Mode=OneWay}"
 					Content="Generate" 
 					ClickMode="Press" Click="GenerateClick"
