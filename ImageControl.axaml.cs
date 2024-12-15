@@ -76,12 +76,15 @@ public partial class ImageControl : UserControl
 
     #endregion Properties
 
+    public Image? TheImageControl { get; private set; }
+
     #region Constructors
 
     public ImageControl()
     {
         InitializeComponent();
         this.DataContext = this;
+        this.TheImageControl = this.GetControl<Image>(nameof(TheImage));
     }
 
     #endregion Constructors
@@ -89,24 +92,24 @@ public partial class ImageControl : UserControl
     #region Coerce methods
 
     public static double OriginXCoerce(AvaloniaObject o, double value) =>
-        (o is ImageControl ic && ic.GetControl<Image>(nameof(TheImage)) is Image im) ? 
-        Math.Min(Math.Max(0, value), im.DesiredSize.Width - ic.CropWidth) : 
+        (o is ImageControl ic) ? 
+        Math.Min(Math.Max(0, value), (ic.TheImageControl?.DesiredSize.Width ?? 0) - ic.CropWidth) : 
         value;
 
     public static double OriginYCoerce(AvaloniaObject o, double value) => 
-        (o is ImageControl ic && ic.GetControl<Image>(nameof(TheImage)) is Image im) ? 
-        Math.Min(Math.Max(0, value), im.DesiredSize.Height - ic.CropHeight) : 
+        (o is ImageControl ic) ? 
+        Math.Min(Math.Max(0, value), (ic.TheImageControl?.DesiredSize.Height ?? 0) - ic.CropHeight) : 
         value;
 
     public static double CropWidthCoerce(AvaloniaObject o, double value) =>
-        (o is ImageControl ic && ic.GetControl<Image>(nameof(TheImage)) is Image im) ?
-        Math.Min(Math.Max(0, value), im.DesiredSize.Width - ic.OriginX) :
+        (o is ImageControl ic) ?
+        Math.Min(Math.Max(0, value), (ic.TheImageControl?.DesiredSize.Width ?? 0) - ic.OriginX) :
         value;
 
     public static double CropHeightCoerce(AvaloniaObject o, double value)
     {
-        if (o is not ImageControl ic || ic.GetControl<Image>(nameof(TheImage)) is not Image im) return value;
-        var height = Math.Min(Math.Max(0, value), Math.Min(im.DesiredSize.Height - ic.OriginY, (im.DesiredSize.Width - ic.OriginX) / ImageAspectRatio));
+        if (o is not ImageControl ic) return value;
+        var height = Math.Min(Math.Max(0, value), Math.Min((ic.TheImageControl?.DesiredSize.Height ?? 0) - ic.OriginY, ((ic.TheImageControl?.DesiredSize.Width ?? 0) - ic.OriginX) / ImageAspectRatio));
         ic.CropWidth = height * ImageAspectRatio;
         return height;
     }
