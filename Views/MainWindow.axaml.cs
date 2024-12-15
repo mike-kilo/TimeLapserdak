@@ -80,9 +80,9 @@ namespace TimeLapserdak.Views
             var sizeStep = new PixelSize(endingCrop.Width - startingCrop.Width, endingCrop.Height - startingCrop.Height).ToSize(picsCount);
             List<PixelRect> crops = Enumerable.Range(0, picsCount)
                 .Select(n => new PixelRect(
-                    startingCrop.Position + PixelPoint.FromPoint(positionStep, n), 
+                    startingCrop.Position + PixelPoint.FromPoint(positionStep, n),
                     PixelSize.FromSize(new Size(
-                        (startingCrop.Height + sizeStep.Height * n) * ImageControl.ImageAspectRatio, 
+                        (startingCrop.Height + sizeStep.Height * n) * ImageControl.ImageAspectRatio,
                         startingCrop.Height + sizeStep.Height * n), 1.0)))
                 .ToList();
 
@@ -99,20 +99,14 @@ namespace TimeLapserdak.Views
 
 
             if (Directory.GetFiles(tempFolder, "*.jpg", SearchOption.TopDirectoryOnly).Select(f => new FileInfo(f)).ToList() is List<FileInfo> tmpFiles)
-            {
+                {
                 dc.VideoProgress = 0;
                 dc.IsVideoConverting = true;
 
                 if (ImageProcessing.CreateFrames(tmpFiles) is IEnumerable<BitmapVideoFrameWrapper> frames)
                 {
                     var converted = await ImageProcessing.GenerateVideo(frames, Path.GetDirectoryName(dc.InputFilesList[0].FullName) ?? Path.GetTempPath());
-
-                    Debug.WriteLine($"Conversion succeeded? {converted}");
-                    if(converted)
-                    {
-                        Directory.Delete(tempFolder, true);
-                    }
-
+                    if(converted) Directory.Delete(tempFolder, true);
                 }
         
                 dc.IsVideoConverting = false;
