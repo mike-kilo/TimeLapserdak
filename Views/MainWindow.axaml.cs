@@ -105,7 +105,7 @@ namespace TimeLapserdak.Views
 
                 if (ImageProcessing.CreateFrames(tmpFiles) is IEnumerable<BitmapVideoFrameWrapper> frames)
                 {
-                    var converted = await ImageProcessing.GenerateVideo(frames, Path.GetDirectoryName(dc.InputFilesList[0].FullName) ?? Path.GetTempPath());
+                    var converted = await ImageProcessing.GenerateVideo(frames, 25, Path.GetDirectoryName(dc.InputFilesList[0].FullName) ?? Path.GetTempPath());
                     if(converted) Directory.Delete(tempFolder, true);
                 }
         

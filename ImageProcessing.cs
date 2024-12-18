@@ -1,4 +1,5 @@
-﻿using Avalonia;
+using Avalonia;
+using Avalonia.Logging;
 using FFMpegCore;
 using FFMpegCore.Enums;
 using FFMpegCore.Extensions.SkiaSharp;
@@ -6,6 +7,7 @@ using FFMpegCore.Pipes;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -39,9 +41,9 @@ namespace TimeLapserdak
             }
         }
 
-        public static async Task<bool> GenerateVideo(IEnumerable<IVideoFrame> frames, string outputFolder)
+        public static async Task<bool> GenerateVideo(IEnumerable<IVideoFrame> frames, double frameRate, string outputFolder)
         {
-            RawVideoPipeSource source = new(frames) { FrameRate = 25 };
+            RawVideoPipeSource source = new(frames) { FrameRate = frameRate };
             bool success = await FFMpegArguments
                 .FromPipeInput(source)
                 .OutputToFile(
@@ -53,7 +55,7 @@ namespace TimeLapserdak
                         .WithVariableBitrate(5)
                         .WithFastStart()
                         .WithSpeedPreset(Speed.UltraFast))
-                .ProcessAsynchronously();
+                .ProcessAsynchronously(throwOnError: false);
 
             return success;
         }
