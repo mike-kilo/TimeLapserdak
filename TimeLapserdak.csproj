@@ -8,11 +8,16 @@
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     <Version>1.0.8</Version>
     <PackageIcon>TimeLapserdakIcon.png</PackageIcon>
+    <ApplicationIcon>Assets\TimeLapserdak.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <Folder Include="Models\" />
     <AvaloniaResource Include="Assets\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\TimeLapserdak.ico" />
   </ItemGroup>
 
   <ItemGroup>
