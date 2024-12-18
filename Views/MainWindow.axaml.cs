@@ -97,23 +97,35 @@ namespace TimeLapserdak.Views
                 });
             });
 
-
             if (Directory.GetFiles(tempFolder, "*.jpg", SearchOption.TopDirectoryOnly).Select(f => new FileInfo(f)).ToList() is List<FileInfo> tmpFiles)
-                {
+            {
                 dc.VideoProgress = 0;
                 dc.IsVideoConverting = true;
 
                 if (ImageProcessing.CreateFrames(tmpFiles) is IEnumerable<BitmapVideoFrameWrapper> frames)
                 {
+                    ImageProcessing.ProgressChangedEvent += this.VideoGenerateProgressChanged;
+
                     var converted = await ImageProcessing.GenerateVideo(frames, 25, Path.GetDirectoryName(dc.InputFilesList[0].FullName) ?? Path.GetTempPath());
-                    if(converted) Directory.Delete(tempFolder, true);
+                    if (converted) Directory.Delete(tempFolder, true);
+
+                    ImageProcessing.ProgressChangedEvent -= this.VideoGenerateProgressChanged;
                 }
-        
+
                 dc.IsVideoConverting = false;
-                dc.VideoProgress = 1;
+                dc.VideoProgress = 100;
             }
 
             dc.IsBusy = false;
+        }
+
+        public void VideoGenerateProgressChanged(object? sender, double d)
+        {
+            Dispatcher.UIThread.Invoke(() => 
+            { 
+                if (this.DataContext is not MainWindowViewModel dc) return;
+                dc.VideoProgress = d;
+            });
         }
     }
 }
