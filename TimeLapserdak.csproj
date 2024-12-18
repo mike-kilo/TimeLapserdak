@@ -6,7 +6,7 @@
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-    <Version>1.0.6</Version>
+    <Version>1.0.7</Version>
     <PackageIcon>TimeLapserdakIcon.png</PackageIcon>
   </PropertyGroup>
 
@@ -26,6 +26,8 @@
       <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+    <PackageReference Include="FFMpegCore" Version="5.1.0" />
+    <PackageReference Include="FFMpegCore.Extensions.SkiaSharp" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>

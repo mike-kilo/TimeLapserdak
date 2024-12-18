@@ -4,8 +4,10 @@ using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
+using FFMpegCore.Extensions.SkiaSharp;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -41,6 +43,8 @@ namespace TimeLapserdak.Views
 
             dc.StartingImageBinding = null;
             dc.EndingImageBinding = null;
+            dc.PicturesProgress = 0;
+            dc.VideoProgress = 0;
 
             if (folder.Count > 0)
             {
@@ -69,16 +73,19 @@ namespace TimeLapserdak.Views
 
             if (this.DataContext is not MainWindowViewModel dc) return;
             dc.IsBusy = true;
-            dc.Progress = 0;
+            dc.IsVideoConverting = true;
+
+            dc.PicturesProgress = 0;
+            dc.VideoProgress = 0;
 
             var picsCount = dc.InputFilesList.Count;
             var positionStep = (endingCrop.Position - startingCrop.Position).ToPoint(picsCount);
             var sizeStep = new PixelSize(endingCrop.Width - startingCrop.Width, endingCrop.Height - startingCrop.Height).ToSize(picsCount);
             List<PixelRect> crops = Enumerable.Range(0, picsCount)
                 .Select(n => new PixelRect(
-                    startingCrop.Position + PixelPoint.FromPoint(positionStep, n), 
+                    startingCrop.Position + PixelPoint.FromPoint(positionStep, n),
                     PixelSize.FromSize(new Size(
-                        (startingCrop.Height + sizeStep.Height * n) * ImageControl.ImageAspectRatio, 
+                        (startingCrop.Height + sizeStep.Height * n) * ImageControl.ImageAspectRatio,
                         startingCrop.Height + sizeStep.Height * n), 1.0)))
                 .ToList();
 
@@ -89,11 +96,34 @@ namespace TimeLapserdak.Views
                 Parallel.ForEach(dc.InputFilesList.Zip(crops, (f, c) => new { File = f, Crop = c }).ToList(), (i) =>
                 {
                     ImageProcessing.CropAndResizePictures(i.File, i.Crop, tempFolder);
-                    Dispatcher.UIThread.Invoke(() => dc.Progress++);
+                    Dispatcher.UIThread.Invoke(() => dc.PicturesProgress++);
                 });
             });
 
+            if (Directory.GetFiles(tempFolder, "*.jpg", SearchOption.TopDirectoryOnly).Select(f => new FileInfo(f)).ToList() is List<FileInfo> tmpFiles)
+            {
+                if (ImageProcessing.CreateFrames(tmpFiles) is IEnumerable<BitmapVideoFrameWrapper> frames)
+                {
+                    ImageProcessing.ProgressChangedEvent += this.VideoGenerateProgressChanged;
+                    var converted = await ImageProcessing.GenerateVideo(frames, 25, Path.GetDirectoryName(dc.InputFilesList[0].FullName) ?? Path.GetTempPath());
+                    ImageProcessing.ProgressChangedEvent -= this.VideoGenerateProgressChanged;
+                    if (converted) Directory.Delete(tempFolder, true);
+                   dc.VideoProgress = 100;
+                }
+            }
+            
+            dc.IsVideoConverting = false;
             dc.IsBusy = false;
+        }
+
+        public void VideoGenerateProgressChanged(object? sender, double d)
+        {
+            Dispatcher.UIThread.Invoke(() => 
+            { 
+                if (this.DataContext is not MainWindowViewModel dc) return;
+                dc.IsVideoConverting = false;
+                dc.VideoProgress = d;
+            });
         }
     }
 }

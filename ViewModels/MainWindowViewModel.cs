@@ -64,15 +64,15 @@ namespace TimeLapserdak.ViewModels
             }
         }
 
-        private int _progress = 0;
+        private int _picturesProgress = 0;
 
-        public int Progress
+        public int PicturesProgress
         {
-            get => this._progress; 
+            get => this._picturesProgress; 
             set 
             { 
-                this._progress = value; 
-                OnPropertyChanged(nameof(Progress));
+                this._picturesProgress = value; 
+                OnPropertyChanged(nameof(PicturesProgress));
             }
         }
 
@@ -85,6 +85,30 @@ namespace TimeLapserdak.ViewModels
             { 
                 this._isBusy = value; 
                 OnPropertyChanged(nameof(IsBusy));
+            }
+        }
+
+        private bool _isVideoConverting;
+
+        public bool IsVideoConverting
+        {
+            get => _isVideoConverting;
+            set 
+            { 
+                this._isVideoConverting = value;
+                OnPropertyChanged(nameof(IsVideoConverting));
+            }
+        }
+
+        private double _videoProgress = 0;
+
+        public double VideoProgress
+        {
+            get => this._videoProgress;
+            set
+            {
+                this._videoProgress = value;
+                OnPropertyChanged(nameof(VideoProgress));
             }
         }
     }
