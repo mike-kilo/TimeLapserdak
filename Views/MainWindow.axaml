@@ -48,8 +48,8 @@
 					 Minimum="0" Maximum="{Binding InputFilesList.Count}" Value="{Binding PicturesProgress}"
 					 ShowProgressText="True" ProgressTextFormat="Converting pictures, {0}/{3} ({1:0}%) done"/>
 		<ProgressBar Margin="3" Height="24" FontWeight="DemiBold" Background="Aqua" Grid.Row="4" 
-					 IsIndeterminate="{Binding IsVideoConverting}" Value="{Binding VideoProgress}" Maximum="1" 
-					 ShowProgressText="{Binding IsVideoConverting}" ProgressTextFormat="Generating video, please wait..."/>
+					 Value="{Binding VideoProgress}" Maximum="100" 
+					 ShowProgressText="True" ProgressTextFormat="Generating video, {1:0}% done"/>
 		<Grid Margin="3" Grid.Row="5" IsEnabled="{Binding !IsBusy, Mode=OneWay}">
 			<Button IsEnabled="{Binding ImagesFolder.Length, Mode=OneWay}"
 					Content="Generate" 

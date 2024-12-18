@@ -100,9 +100,9 @@ namespace TimeLapserdak.ViewModels
             }
         }
 
-        private int _videoProgress = 0;
+        private double _videoProgress = 0;
 
-        public int VideoProgress
+        public double VideoProgress
         {
             get => this._videoProgress;
             set
