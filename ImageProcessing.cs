@@ -1,7 +1,8 @@
-﻿using Avalonia;
+using Avalonia;
 using FFMpegCore;
 using FFMpegCore.Enums;
 using FFMpegCore.Extensions.SkiaSharp;
+using FFMpegCore.Helpers;
 using FFMpegCore.Pipes;
 using SkiaSharp;
 using System;
@@ -62,6 +63,26 @@ namespace TimeLapserdak
                 .ProcessAsynchronously(throwOnError: false);
 
             return success;
+        }
+
+        public static bool IsFFMpegAvailable()
+        {
+            var ffmpegExists = true;
+
+            try
+            {
+                FFMpegHelper.VerifyFFMpegExists(new FFOptions { });
+            }
+            catch (Instances.Exceptions.InstanceFileNotFoundException)
+            {
+                ffmpegExists = false;
+            }
+            catch (Exception) 
+            { 
+                ffmpegExists = false;
+            }
+            
+            return ffmpegExists;
         }
     }
 }
