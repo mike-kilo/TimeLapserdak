@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using FFMpegCore;
 using FFMpegCore.Enums;
 using FFMpegCore.Extensions.SkiaSharp;
@@ -62,6 +62,22 @@ namespace TimeLapserdak
                 .ProcessAsynchronously(throwOnError: false);
 
             return success;
+        }
+
+        public static bool IsFFMpegAvailable()
+        {
+            try
+            {
+                bool success = FFMpegArguments.FromFileInput(string.Empty).OutputToFile(string.Empty).ProcessSynchronously();
+            }
+            catch (Instances.Exceptions.InstanceFileNotFoundException ex)
+            {
+                if ("File not found: ffmpeg.exe".Equals(ex.Message))
+                    return false;
+            }
+            catch (Exception ex) { }
+            
+            return true;
         }
     }
 }
