@@ -45,7 +45,7 @@ namespace TimeLapserdak
 
         public static async Task<bool> GenerateVideo(IEnumerable<IVideoFrame> frames, double frameRate, string outputFolder)
         {
-            Action<double> progressHandler = new Action<double>(p => ProgressChangedEvent?.Invoke(null, p));
+            Action<double> progressHandler = new(p => ProgressChangedEvent?.Invoke(null, p));
 
             RawVideoPipeSource source = new(frames) { FrameRate = frameRate };
             bool success = await FFMpegArguments
