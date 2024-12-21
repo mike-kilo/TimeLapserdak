@@ -15,7 +15,7 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 	<Grid ColumnDefinitions="*" RowDefinitions="Auto, Auto, *, Auto, Auto, Auto">
-		<local:ErrorBox ErrorInfo="{Binding ErrorMessage}" ZIndex="10" Grid.RowSpan="6" HorizontalAlignment="Center" VerticalAlignment="Center" />
+		<local:ErrorBox ErrorInfo="{Binding ErrorMessage}" ZIndex="10" Grid.RowSpan="6" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
 		<Border Margin="3" BorderBrush="DarkGray" BorderThickness="1" Background="LightYellow">
 			<Grid ColumnDefinitions="2*,4*,3*">
 				<TextBlock Margin="3" VerticalAlignment="Center" >
