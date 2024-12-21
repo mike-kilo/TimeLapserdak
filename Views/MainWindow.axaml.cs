@@ -89,8 +89,17 @@ namespace TimeLapserdak.Views
                         startingCrop.Height + sizeStep.Height * n), 1.0)))
                 .ToList();
 
-            var tempFolder = Path.Combine(Path.GetDirectoryName(dc.InputFilesList[0].FullName) ?? Path.GetTempPath(), DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss"));
-            Directory.CreateDirectory(tempFolder);
+            var tempFolder = string.Empty;
+            try
+            {
+                tempFolder = Path.Combine(dc.ImagesFolder ?? Path.GetTempPath(), DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss"));
+                Directory.CreateDirectory(tempFolder);
+            }
+            catch (Exception ex)
+            { 
+                dc.ErrorMessage = $"Encountered an error when creating temporary output folder \"{tempFolder}\"" + Environment.NewLine + ex.Message;
+            }
+
             await Task.Run(() =>
             {
                 Parallel.ForEach(dc.InputFilesList.Zip(crops, (f, c) => new { File = f, Crop = c }).ToList(), (i) =>
