@@ -7,7 +7,6 @@ using Avalonia.Threading;
 using FFMpegCore.Extensions.SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -109,16 +108,15 @@ namespace TimeLapserdak.Views
                 });
             });
 
-            if (ImageProcessing.IsFFMpegAvailable() && (Directory.GetFiles(tempFolder, "*.jpg", SearchOption.TopDirectoryOnly).Select(f => new FileInfo(f)).ToList() is List<FileInfo> tmpFiles))
+            if (ImageProcessing.IsFFMpegAvailable() && 
+                (Directory.GetFiles(tempFolder, "*.jpg", SearchOption.TopDirectoryOnly).Select(f => new FileInfo(f)).ToList() is List<FileInfo> tmpFiles) &&
+                ImageProcessing.CreateFrames(tmpFiles) is IEnumerable<BitmapVideoFrameWrapper> frames)
             {
-                if (ImageProcessing.CreateFrames(tmpFiles) is IEnumerable<BitmapVideoFrameWrapper> frames)
-                {
-                    ImageProcessing.ProgressChangedEvent += this.VideoGenerateProgressChanged;
-                    var converted = await ImageProcessing.GenerateVideo(frames, 25, Path.GetDirectoryName(dc.InputFilesList[0].FullName) ?? Path.GetTempPath());
-                    ImageProcessing.ProgressChangedEvent -= this.VideoGenerateProgressChanged;
-                    if (converted) Directory.Delete(tempFolder, true);
-                   dc.VideoProgress = 100;
-                }
+                ImageProcessing.ProgressChangedEvent += this.VideoGenerateProgressChanged;
+                var converted = await ImageProcessing.GenerateVideo(frames, 25, Path.GetDirectoryName(dc.InputFilesList[0].FullName) ?? Path.GetTempPath());
+                ImageProcessing.ProgressChangedEvent -= this.VideoGenerateProgressChanged;
+                if (converted) Directory.Delete(tempFolder, true);
+                dc.VideoProgress = 100;
             }
             
             dc.IsVideoConverting = false;
