@@ -125,5 +125,11 @@ namespace TimeLapserdak.Views
                 dc.VideoProgress = d;
             });
         }
+
+        public void DownloadFFMpegClick(object sender, RoutedEventArgs e)
+        {
+            var launcher = TopLevel.GetTopLevel(sender as Control)?.Launcher;
+            launcher?.LaunchUriAsync(new Uri("https://www.ffmpeg.org/"));
+        }
     }
 }

@@ -17,7 +17,7 @@
     </Design.DataContext>
 	<Grid ColumnDefinitions="*" RowDefinitions="Auto, Auto, *, Auto, Auto, Auto">
 		<Border Margin="3" BorderBrush="DarkGray" BorderThickness="1" Background="LightYellow">
-			<Grid ColumnDefinitions="*,2*">
+			<Grid ColumnDefinitions="2*,4*,3*">
 				<TextBlock Margin="3" VerticalAlignment="Center" >
 					<Run FontWeight="DemiBold">Time lapse / hyperlapse generator</Run>
 				</TextBlock>
@@ -29,6 +29,23 @@
 					<Run>② adjust cropping frame of the starting and ending images</Run>
 					<LineBreak />
 					<Run>③ press "Generate" and wait for results</Run>
+				</TextBlock>
+				<TextBlock Margin="3" Padding="5" 
+						   Grid.Column="2" 
+						   Background="Red" Foreground="White" 
+						   FontSize="12" FontWeight="DemiBold" 
+						   VerticalAlignment="Center" HorizontalAlignment="Right"
+						   IsVisible="{Binding !IsFFMpegAvailable}">
+					<Run>FFMpeg is not available!</Run>
+					<LineBreak />
+					<Run>Video won't be generated, only the intermediate images.</Run>
+					<LineBreak />
+					<Span>
+						<Run>Download FFMpeg from</Run>
+						<HyperlinkButton Padding="0" Margin="0,0,0,-2" Click="DownloadFFMpegClick" VerticalAlignment="Top" VerticalContentAlignment="Top">
+							https://www.ffmpeg.org/
+						</HyperlinkButton>
+					</Span>
 				</TextBlock>
 			</Grid>
 		</Border>

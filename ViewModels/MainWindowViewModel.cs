@@ -111,5 +111,10 @@ namespace TimeLapserdak.ViewModels
                 OnPropertyChanged(nameof(VideoProgress));
             }
         }
+
+        public static bool IsFFMpegAvailable
+        {
+            get => ImageProcessing.IsFFMpegAvailable();
+        }
     }
 }
