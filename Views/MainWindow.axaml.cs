@@ -138,5 +138,11 @@ namespace TimeLapserdak.Views
             var launcher = TopLevel.GetTopLevel(sender as Control)?.Launcher;
             launcher?.LaunchUriAsync(new Uri("https://www.ffmpeg.org/"));
         }
+
+        public void MainWindowLoaded(object sender, RoutedEventArgs e)
+        {
+            if (this.DataContext is not MainWindowViewModel dc) return;
+            dc.ErrorMessage = ImageProcessing.IsFFMpegAvailable() ? string.Empty : "FFMpeg not found";
+        }
     }
 }
