@@ -15,20 +15,30 @@ namespace TimeLapserdak
 {
     public static class ImageProcessing
     {
-        public static void CropAndResizePicture(FileInfo file, PixelRect crop, string outputFolder)
+        public static bool CropAndResizePicture(FileInfo file, PixelRect crop, string outputFolder)
         {
             using var bitmap = SKBitmap.Decode(file.FullName);
+            if (bitmap is null) return false;
             using var pixmap = new SKPixmap(bitmap.Info, bitmap.GetPixels());
             SKRectI cropRect = new(crop.X, crop.Y, crop.Right, crop.Bottom);
                 
             using var croppedBitmap = new SKBitmap(new SKImageInfo(crop.Width, crop.Height));
-            if (!bitmap.ExtractSubset(croppedBitmap, cropRect)) return;
+            if (!bitmap.ExtractSubset(croppedBitmap, cropRect)) return false;
                 
             using var outputBitmap = new SKBitmap(new SKImageInfo(1920, 1080));
-            if (!croppedBitmap.ScalePixels(outputBitmap, SKFilterQuality.High)) return;
+            if (!croppedBitmap.ScalePixels(outputBitmap, SKFilterQuality.High)) return false;
                 
             using var data = outputBitmap.Encode(SKEncodedImageFormat.Jpeg, 95);
-            File.WriteAllBytes(Path.Combine(outputFolder, file.Name), data.ToArray());
+            try
+            {
+                File.WriteAllBytes(Path.Combine(outputFolder, file.Name), data.ToArray());
+            }
+            catch 
+            {
+                return false;
+            }
+
+            return true;
         }
 
         public static IEnumerable<BitmapVideoFrameWrapper> CreateFrames(List<FileInfo> images)

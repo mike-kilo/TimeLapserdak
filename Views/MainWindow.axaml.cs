@@ -100,10 +100,16 @@ namespace TimeLapserdak.Views
             {
                 Parallel.ForEach(dc.InputFilesList.Zip(crops, (f, c) => new { File = f, Crop = c }).ToList(), (i) =>
                 {
-                    ImageProcessing.CropAndResizePicture(i.File, i.Crop, tempFolder);
+                    if (ImageProcessing.CropAndResizePicture(i.File, i.Crop, tempFolder))
                     Dispatcher.UIThread.Invoke(() => dc.PicturesProgress++);
                 });
             });
+
+            if (dc.PicturesProgress < picsCount)
+                dc.ErrorMessage = @"Some pictures were not converted.
+Apparently there are some issues 
+with storage (hard drive) access,
+insufficient space or missing folder.";
 
             if (ImageProcessing.IsFFMpegAvailable() && 
                 (Directory.GetFiles(tempFolder, "*.jpg", SearchOption.TopDirectoryOnly).Select(f => new FileInfo(f)).ToList() is List<FileInfo> tmpFiles) &&
