@@ -9,9 +9,20 @@ namespace TimeLapserdak;
 
 public partial class ImageControl : UserControl
 {
+    private enum MouseMoveAction
+    {
+        None,
+        Resize,
+        Move,
+    }
+
     #region Properties
 
     public static double ImageAspectRatio => 16.0 / 9.0;
+
+    private MouseMoveAction _currentMouseAction = MouseMoveAction.None;
+    private PointerPoint _initialClickPoint = new PointerPoint();
+    private Point _onClickParam = new Point();
 
     public double OriginX
     {
@@ -123,40 +134,52 @@ public partial class ImageControl : UserControl
         var intrPoints = args.GetIntermediatePoints(sender as Control);   
         var pos = point.Position;
 
+        Cursor = Cursor.Default;
         if (0 <= pos.X - this.OriginX && pos.X - this.OriginX <= this.CropWidth)
         {
-            if (Math.Abs(pos.Y - this.OriginY - this.CropHeight) <= 10)
-            {
+            if (Math.Abs(pos.Y - this.OriginY - this.CropHeight) <= 10) 
                 this.Cursor = new Cursor(StandardCursorType.SizeNorthSouth);
-                if (point.Properties.IsLeftButtonPressed)
-                {
-                    var pdiff = intrPoints[^1].Position - intrPoints[0].Position;
-                    this.CropHeight += pdiff.Y;
-                }
-
-                return;
-            }
-
-            if (0 <= pos.Y - this.OriginY && pos.Y - this.OriginY <= this.CropHeight)
-            {
-                this.Cursor = new Cursor(StandardCursorType.SizeAll);
-                if (point.Properties.IsLeftButtonPressed) 
-                {
-                    var pdiff = intrPoints[^1].Position - intrPoints[0].Position;
-                    this.OriginX += pdiff.X;
-                    this.OriginY += pdiff.Y;
-                }
-
-                return;
-            }
+            else if 
+                (0 <= pos.Y - this.OriginY && pos.Y - this.OriginY <= this.CropHeight) this.Cursor = new Cursor(StandardCursorType.SizeAll);
         }
 
-        Cursor = Cursor.Default;
+        if (this._currentMouseAction == MouseMoveAction.Move)
+        {
+            var pdiff = point.Position - this._initialClickPoint.Position;
+            this.OriginX = this._onClickParam.X + pdiff.X;
+            this.OriginY = this._onClickParam.Y + pdiff.Y;
+        }
+
+        if (this._currentMouseAction == MouseMoveAction.Resize)
+        {
+            var pdiff = point.Position - this._initialClickPoint.Position;
+            this.CropHeight = this._onClickParam.Y + pdiff.Y;
+        }
     }
 
     public void MouseExitedOverImage(object sender, PointerEventArgs args)
     { 
         Cursor = Cursor.Default;
+        this._currentMouseAction = MouseMoveAction.None;
+    }
+
+    public void MouseButtonPressedOverImage(object sender, PointerPressedEventArgs args)
+    {
+        this._initialClickPoint = args.GetCurrentPoint(sender as Control);
+        if (this._initialClickPoint.Properties.IsLeftButtonPressed)
+            this._currentMouseAction = this.Cursor?.ToString() switch
+            {
+                "SizeAll" => MouseMoveAction.Move,
+                "SizeNorthSouth" => MouseMoveAction.Resize,
+                _ => MouseMoveAction.None,
+            };
+        if (this._currentMouseAction == MouseMoveAction.Move) this._onClickParam = new Point(this.OriginX, this.OriginY);
+        if (this._currentMouseAction == MouseMoveAction.Resize) this._onClickParam = new Point(0, this.CropHeight);
+    }
+
+    public void MouseButtonReleasedOverImage(object sender, PointerReleasedEventArgs args)
+    {
+        this._currentMouseAction = MouseMoveAction.None;
     }
 
     public void ImageSizeChanged(object sender, SizeChangedEventArgs args)
