@@ -60,9 +60,6 @@ namespace TimeLapserdak.Views
                 dc.StartingImageBinding = new Bitmap(dc.InputFilesList.First().FullName);
                 dc.EndingImageBinding = new Bitmap(dc.InputFilesList.Last().FullName);
             }
-
-            this._startingImageControl.ImageSource = dc.StartingImageBinding;
-            this._endingImageControl.ImageSource = dc.EndingImageBinding;
         }
 
         public async void GenerateClick(object sender, RoutedEventArgs e)

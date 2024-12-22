@@ -83,7 +83,6 @@ public partial class ImageControl : UserControl
     public ImageControl()
     {
         InitializeComponent();
-        this.DataContext = this;
         this.TheImageControl = this.GetControl<Image>(nameof(TheImage));
     }
 

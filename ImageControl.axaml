@@ -9,13 +9,13 @@
 		<Border ClipToBounds="True" BorderBrush="DarkGray" BorderThickness="1" Background="LightYellow">
 			<Grid>
 				<Border Width="{Binding ElementName=TheImage, Path=Bounds.Width}" Height="{Binding ElementName=TheImage, Path=Bounds.Height}" ZIndex="10" >
-					<Rectangle Width="{Binding CropWidth}" Height="{Binding CropHeight}" Stroke="Red" StrokeThickness="1" HorizontalAlignment="Left" VerticalAlignment="Top" IsHitTestVisible="False" >
+					<Rectangle Width="{Binding CropWidth, RelativeSource={RelativeSource AncestorType=UserControl}}" Height="{Binding CropHeight, RelativeSource={RelativeSource AncestorType=UserControl}}}" Stroke="Red" StrokeThickness="1" HorizontalAlignment="Left" VerticalAlignment="Top" IsHitTestVisible="False" >
 						<Rectangle.RenderTransform>
-							<TranslateTransform X="{Binding OriginX}" Y="{Binding OriginY}" />
+							<TranslateTransform X="{Binding OriginX, RelativeSource={RelativeSource AncestorType=UserControl}}}" Y="{Binding OriginY, RelativeSource={RelativeSource AncestorType=UserControl}}}" />
 						</Rectangle.RenderTransform>
 					</Rectangle>
 				</Border>
-				<Image x:Name="TheImage" Source="{Binding ImageSource}" SizeChanged="ImageSizeChanged"
+				<Image x:Name="TheImage" Source="{Binding ImageSource, RelativeSource={RelativeSource AncestorType=UserControl}}" SizeChanged="ImageSizeChanged"
 					   PointerMoved="MouseHoverOverImage" PointerExited="MouseExitedOverImage" />
 			</Grid>
 		</Border>
