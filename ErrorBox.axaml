@@ -14,7 +14,7 @@
 					<TextBlock Grid.Row="1" Margin="3">Big players say "something went wrong".<LineBreak/>I'm giving you detailed information:</TextBlock>
 					<Border Grid.Row="2" Margin="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="1" BorderBrush="Black" >
 						<ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Visible">
-							<TextBox IsReadOnly="True" BorderThickness="0" Text="{Binding ErrorInfo, Mode=OneWay}" />
+							<TextBox IsReadOnly="True" BorderThickness="0" Padding="2" Text="{Binding ErrorInfo, Mode=OneWay, RelativeSource={RelativeSource AncestorType=UserControl}}}" />
 						</ScrollViewer>
 					</Border>
 					<Separator Grid.Row="3" Margin="3"/>

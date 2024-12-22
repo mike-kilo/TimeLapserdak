@@ -8,7 +8,7 @@ public partial class ErrorBox : UserControl
 {
     public string ErrorInfo
     {
-        get { return (string)GetValue(ErrorInfoProperty); }
+        get { return GetValue(ErrorInfoProperty); }
         set { SetValue(ErrorInfoProperty, value); }
     }
 
@@ -18,7 +18,6 @@ public partial class ErrorBox : UserControl
     public ErrorBox()
     {
         InitializeComponent();
-        this.DataContext = this;
     }
 
     public void CloseButtonClick(object sender, RoutedEventArgs e)
