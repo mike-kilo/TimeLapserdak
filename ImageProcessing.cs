@@ -15,7 +15,7 @@ namespace TimeLapserdak
 {
     public static class ImageProcessing
     {
-        public static void CropAndResizePictures(FileInfo file, PixelRect crop, string outputFolder)
+        public static void CropAndResizePicture(FileInfo file, PixelRect crop, string outputFolder)
         {
             using var bitmap = SKBitmap.Decode(file.FullName);
             using var pixmap = new SKPixmap(bitmap.Info, bitmap.GetPixels());
