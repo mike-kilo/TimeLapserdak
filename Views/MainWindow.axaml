@@ -61,19 +61,19 @@
 			<local:ImageControl x:Name="StartingImage" ImageSource="{Binding StartingImageBinding}" Margin="3" Grid.Row="1" Grid.Column="0" />
 			<local:ImageControl x:Name="EndingImage" ImageSource="{Binding EndingImageBinding}" Margin="3" Grid.Row="1" Grid.Column="1" />
 		</Grid>
-		<ProgressBar Margin="3" Height="24" FontWeight="DemiBold" Background="Aqua" Grid.Row="3" LargeChange="1" 
-					 Minimum="0" Maximum="{Binding InputFilesList.Count}" Value="{Binding PicturesProgress}"
-					 ShowProgressText="True" ProgressTextFormat="Converting pictures, {0}/{3} ({1:0}%) done"/>
-		<ProgressBar Margin="3" Height="24" FontWeight="DemiBold" Background="Aqua" Grid.Row="4" 
-					 IsIndeterminate="{Binding IsVideoConverting}" Value="{Binding VideoProgress}" Maximum="100" 
-					 ShowProgressText="True" ProgressTextFormat="Generating video, {1:0}% done"/>
-		<Grid Margin="3" Grid.Row="5" IsEnabled="{Binding !IsBusy, Mode=OneWay}">
+		<Grid Margin="3" Grid.Row="3" IsEnabled="{Binding !IsBusy, Mode=OneWay}">
 			<Button IsEnabled="{Binding ImagesFolder.Length, Mode=OneWay}"
-					Content="Generate" 
+					Content="Generate"
 					ClickMode="Press" Click="GenerateClick"
-					Width="90" 
+					Width="90"
 					HorizontalAlignment="Center" HorizontalContentAlignment="Center" />
 		</Grid>
+		<ProgressBar Margin="3" Height="24" FontWeight="DemiBold" Background="Aqua" Grid.Row="4" LargeChange="1" 
+					 Minimum="0" Maximum="{Binding InputFilesList.Count}" Value="{Binding PicturesProgress}"
+					 ShowProgressText="True" ProgressTextFormat="Converting pictures, {0}/{3} ({1:0}%) done"/>
+		<ProgressBar Margin="3" Height="24" FontWeight="DemiBold" Background="Aqua" Grid.Row="5" 
+					 IsIndeterminate="{Binding IsVideoConverting}" Value="{Binding VideoProgress}" Maximum="100" 
+					 ShowProgressText="True" ProgressTextFormat="Generating video, {1:0}% done"/>
 		<Border Grid.Row="6" BorderThickness="1" BorderBrush="DarkGray" Background="LightGray" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="1">
 			<Panel>
 				<TextBlock HorizontalAlignment="Left" FontWeight="Light" Text="© 2024 MiKoSoft" Margin="3"/>
