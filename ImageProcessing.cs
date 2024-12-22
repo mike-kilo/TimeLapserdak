@@ -53,26 +53,41 @@ namespace TimeLapserdak
 
         public static event EventHandler<double> ProgressChangedEvent = null!;
 
-        public static async Task<bool> GenerateVideo(IEnumerable<IVideoFrame> frames, double frameRate, string outputFolder)
+        public static async Task<string> GenerateVideo(IEnumerable<IVideoFrame> frames, double frameRate, string outputFolder)
         {
             Action<double> progressHandler = new(p => ProgressChangedEvent?.Invoke(null, p));
 
             RawVideoPipeSource source = new(frames) { FrameRate = frameRate };
-            bool success = await FFMpegArguments
-                .FromPipeInput(source)
-                .OutputToFile(
-                    Path.Combine(outputFolder, "TimeLapserdak." + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".mp4"), 
-                    overwrite: true, 
-                    options => options.WithVideoCodec(VideoCodec.LibX264)
-                        .UsingMultithreading(true)
-                        .WithConstantRateFactor(28)
-                        .WithVariableBitrate(5)
-                        .WithFastStart()
-                        .WithSpeedPreset(Speed.UltraFast))
-                .NotifyOnProgress(progressHandler, TimeSpan.FromSeconds(1.0 * frames.Count() / frameRate))
-                .ProcessAsynchronously(throwOnError: false);
+            bool success = false;
+            string errorMessage = string.Empty;
+            try
+            {
+                success = await FFMpegArguments
+                    .FromPipeInput(source)
+                    .OutputToFile(
+                        Path.Combine(outputFolder, "TimeLapserdak." + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".mp4"),
+                        overwrite: true,
+                        options => options.WithVideoCodec(VideoCodec.LibX264)
+                            .UsingMultithreading(true)
+                            .WithConstantRateFactor(28)
+                            .WithVariableBitrate(5)
+                            .WithFastStart()
+                            .WithFramerate(frameRate)
+                            .WithSpeedPreset(Speed.UltraFast))
+                    .NotifyOnProgress(progressHandler, TimeSpan.FromSeconds(1.0 * frames.Count() / frameRate))
+                    .ProcessAsynchronously(throwOnError: false);
+            }
+            catch (Exception ex)
+            {
+                success = false;
+                errorMessage = ex.Message;
+            }
 
-            return success;
+            if (!success) errorMessage = @"Generating the video was unsuccessful due to an unknown reason.
+Check your FFMpeg settings and try again.
+If the problem persists, contact the developer.";
+
+            return errorMessage;
         }
 
         public static bool IsFFMpegAvailable()

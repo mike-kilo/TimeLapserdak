@@ -101,7 +101,7 @@ namespace TimeLapserdak.Views
                 Parallel.ForEach(dc.InputFilesList.Zip(crops, (f, c) => new { File = f, Crop = c }).ToList(), (i) =>
                 {
                     if (ImageProcessing.CropAndResizePicture(i.File, i.Crop, tempFolder))
-                    Dispatcher.UIThread.Invoke(() => dc.PicturesProgress++);
+                        Dispatcher.UIThread.Invoke(() => dc.PicturesProgress++);
                 });
             });
 
@@ -116,9 +116,10 @@ insufficient space or missing folder.";
                 ImageProcessing.CreateFrames(tmpFiles) is IEnumerable<BitmapVideoFrameWrapper> frames)
             {
                 ImageProcessing.ProgressChangedEvent += this.VideoGenerateProgressChanged;
-                var converted = await ImageProcessing.GenerateVideo(frames, 25, Path.GetDirectoryName(dc.InputFilesList[0].FullName) ?? Path.GetTempPath());
+                var convertedMessage = await ImageProcessing.GenerateVideo(frames, 25, Path.GetDirectoryName(dc.InputFilesList[0].FullName) ?? Path.GetTempPath());
                 ImageProcessing.ProgressChangedEvent -= this.VideoGenerateProgressChanged;
-                if (converted) Directory.Delete(tempFolder, true);
+                if (string.IsNullOrEmpty(convertedMessage)) Directory.Delete(tempFolder, true);
+                if(convertedMessage.Length > 0) dc.ErrorMessage = convertedMessage;
                 dc.VideoProgress = 100;
             }
             
