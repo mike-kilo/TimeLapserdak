@@ -142,7 +142,7 @@ namespace TimeLapserdak.Views
         public void MainWindowLoaded(object sender, RoutedEventArgs e)
         {
             if (this.DataContext is not MainWindowViewModel dc) return;
-            dc.ErrorMessage = ImageProcessing.IsFFMpegAvailable() ? string.Empty : "FFMpeg not found";
+            dc.ErrorMessage = ImageProcessing.IsFFMpegAvailable() ? string.Empty : "FFMpeg not found on your system";
         }
     }
 }
