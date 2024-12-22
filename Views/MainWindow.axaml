@@ -14,7 +14,7 @@
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainWindowViewModel/>
     </Design.DataContext>
-	<Grid ColumnDefinitions="*" RowDefinitions="Auto, Auto, *, Auto, Auto, Auto">
+	<Grid ColumnDefinitions="*" RowDefinitions="Auto, Auto, *, Auto, Auto, Auto, Auto">
 		<local:ErrorBox ErrorInfo="{Binding ErrorMessage}" ZIndex="10" Grid.RowSpan="6" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
 		<Border Margin="3" BorderBrush="DarkGray" BorderThickness="1" Background="LightYellow">
 			<Grid ColumnDefinitions="2*,4*,3*">
@@ -74,5 +74,11 @@
 					Width="90" 
 					HorizontalAlignment="Center" HorizontalContentAlignment="Center" />
 		</Grid>
+		<Border Grid.Row="6" BorderThickness="1" BorderBrush="DarkGray" Background="LightGray" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="1">
+			<Panel>
+				<TextBlock HorizontalAlignment="Left" FontWeight="Light" Text="© 2024 MiKoSoft" Margin="3"/>
+				<TextBlock HorizontalAlignment="Right" FontWeight="Light" Text="{Binding VersionNumber, StringFormat=Version: {0}}" Margin="3"/>
+			</Panel>
+		</Border>
 	</Grid>
 </Window>
