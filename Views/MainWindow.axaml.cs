@@ -7,7 +7,6 @@ using Avalonia.Threading;
 using FFMpegCore.Extensions.SkiaSharp;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -61,9 +60,6 @@ namespace TimeLapserdak.Views
                 dc.StartingImageBinding = new Bitmap(dc.InputFilesList.First().FullName);
                 dc.EndingImageBinding = new Bitmap(dc.InputFilesList.Last().FullName);
             }
-
-            this._startingImageControl.ImageSource = dc.StartingImageBinding;
-            this._endingImageControl.ImageSource = dc.EndingImageBinding;
         }
 
         public async void GenerateClick(object sender, RoutedEventArgs e)
@@ -89,27 +85,42 @@ namespace TimeLapserdak.Views
                         startingCrop.Height + sizeStep.Height * n), 1.0)))
                 .ToList();
 
-            var tempFolder = Path.Combine(Path.GetDirectoryName(dc.InputFilesList[0].FullName) ?? Path.GetTempPath(), DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss"));
-            Directory.CreateDirectory(tempFolder);
+            var tempFolder = string.Empty;
+            try
+            {
+                tempFolder = Path.Combine(dc.ImagesFolder ?? Path.GetTempPath(), DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss"));
+                Directory.CreateDirectory(tempFolder);
+            }
+            catch (Exception ex)
+            { 
+                dc.ErrorMessage = $"Encountered an error when creating temporary output folder \"{tempFolder}\"" + Environment.NewLine + ex.Message;
+            }
+
             await Task.Run(() =>
             {
                 Parallel.ForEach(dc.InputFilesList.Zip(crops, (f, c) => new { File = f, Crop = c }).ToList(), (i) =>
                 {
-                    ImageProcessing.CropAndResizePictures(i.File, i.Crop, tempFolder);
-                    Dispatcher.UIThread.Invoke(() => dc.PicturesProgress++);
+                    if (ImageProcessing.CropAndResizePicture(i.File, i.Crop, tempFolder))
+                        Dispatcher.UIThread.Invoke(() => dc.PicturesProgress++);
                 });
             });
 
-            if (Directory.GetFiles(tempFolder, "*.jpg", SearchOption.TopDirectoryOnly).Select(f => new FileInfo(f)).ToList() is List<FileInfo> tmpFiles)
+            if (dc.PicturesProgress < picsCount)
+                dc.ErrorMessage = @"Some pictures were not converted.
+Apparently there are some issues 
+with storage (hard drive) access,
+insufficient space or missing folder.";
+
+            if (ImageProcessing.IsFFMpegAvailable() && 
+                (Directory.GetFiles(tempFolder, "*.jpg", SearchOption.TopDirectoryOnly).Select(f => new FileInfo(f)).ToList() is List<FileInfo> tmpFiles) &&
+                ImageProcessing.CreateFrames(tmpFiles) is IEnumerable<BitmapVideoFrameWrapper> frames)
             {
-                if (ImageProcessing.CreateFrames(tmpFiles) is IEnumerable<BitmapVideoFrameWrapper> frames)
-                {
-                    ImageProcessing.ProgressChangedEvent += this.VideoGenerateProgressChanged;
-                    var converted = await ImageProcessing.GenerateVideo(frames, 25, Path.GetDirectoryName(dc.InputFilesList[0].FullName) ?? Path.GetTempPath());
-                    ImageProcessing.ProgressChangedEvent -= this.VideoGenerateProgressChanged;
-                    if (converted) Directory.Delete(tempFolder, true);
-                   dc.VideoProgress = 100;
-                }
+                ImageProcessing.ProgressChangedEvent += this.VideoGenerateProgressChanged;
+                var convertedMessage = await ImageProcessing.GenerateVideo(frames, 25, Path.GetDirectoryName(dc.InputFilesList[0].FullName) ?? Path.GetTempPath());
+                ImageProcessing.ProgressChangedEvent -= this.VideoGenerateProgressChanged;
+                if (string.IsNullOrEmpty(convertedMessage)) Directory.Delete(tempFolder, true);
+                if(convertedMessage.Length > 0) dc.ErrorMessage = convertedMessage;
+                dc.VideoProgress = 100;
             }
             
             dc.IsVideoConverting = false;
@@ -124,6 +135,18 @@ namespace TimeLapserdak.Views
                 dc.IsVideoConverting = false;
                 dc.VideoProgress = d;
             });
+        }
+
+        public void DownloadFFMpegClick(object sender, RoutedEventArgs e)
+        {
+            var launcher = TopLevel.GetTopLevel(sender as Control)?.Launcher;
+            launcher?.LaunchUriAsync(new Uri("https://www.ffmpeg.org/"));
+        }
+
+        public void MainWindowLoaded(object sender, RoutedEventArgs e)
+        {
+            if (this.DataContext is not MainWindowViewModel dc) return;
+            dc.ErrorMessage = ImageProcessing.IsFFMpegAvailable() ? string.Empty : "FFMpeg not found on your system";
         }
     }
 }

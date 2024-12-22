@@ -62,7 +62,7 @@ public partial class ImageControl : UserControl
     {
         get
         {
-            if (this.ImageSource is not Bitmap b || this.FindControl<Image>("TheImage") is not Image i) return null;
+            if (this.ImageSource is not Bitmap b || this.TheImageControl is not Image i) return null;
             var scale = b.Size / i.Bounds.Size;
 
             return new PixelRect(
@@ -83,7 +83,6 @@ public partial class ImageControl : UserControl
     public ImageControl()
     {
         InitializeComponent();
-        this.DataContext = this;
         this.TheImageControl = this.GetControl<Image>(nameof(TheImage));
     }
 

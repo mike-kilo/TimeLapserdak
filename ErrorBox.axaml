@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="250"
+             x:Class="TimeLapserdak.ErrorBox"
+			 x:CompileBindings="False"
+			 IsHitTestVisible="{Binding $self.IsVisible}" IsVisible="{Binding $self.ErrorInfo.Length}">
+	<Grid ColumnDefinitions="*,400,*" RowDefinitions="*,250,*" Background="Transparent">
+		<Grid Margin="10" Grid.Column="1" Grid.Row="1" Background="Transparent">
+			<Border BorderThickness="1" BorderBrush="Black" BoxShadow="5 5 10 0 DarkGray" CornerRadius="3">
+				<Grid RowDefinitions="26,Auto,*,5,Auto" Background="White">
+					<TextBlock Background="Black" Foreground="AntiqueWhite" FontWeight="DemiBold" FontSize="16" Padding="3">Error</TextBlock>
+					<TextBlock Grid.Row="1" Margin="3">Big players say "something went wrong".<LineBreak/>I'm giving you detailed information:</TextBlock>
+					<Border Grid.Row="2" Margin="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="1" BorderBrush="Black" >
+						<ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Visible">
+							<TextBox IsReadOnly="True" BorderThickness="0" Padding="2" Text="{Binding ErrorInfo, Mode=OneWay, RelativeSource={RelativeSource AncestorType=UserControl}}}" />
+						</ScrollViewer>
+					</Border>
+					<Separator Grid.Row="3" Margin="3"/>
+					<Button Grid.Row="4" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="3" Click="CloseButtonClick">Close</Button>
+				</Grid>
+			</Border>
+		</Grid>
+	</Grid>
+</UserControl>
