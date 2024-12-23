@@ -16,7 +16,7 @@
 					</Rectangle>
 				</Border>
 				<Image x:Name="TheImage" Source="{Binding ImageSource, RelativeSource={RelativeSource AncestorType=UserControl}}" SizeChanged="ImageSizeChanged"
-					   PointerMoved="MouseHoverOverImage" PointerExited="MouseExitedOverImage" />
+					   PointerMoved="MouseHoverOverImage" PointerExited="MouseExitedOverImage" PointerPressed="MouseButtonPressedOverImage" PointerReleased="MouseButtonReleasedOverImage" />
 			</Grid>
 		</Border>
 		<Grid Grid.Row="1" ColumnDefinitions="*, *, *, 5*">

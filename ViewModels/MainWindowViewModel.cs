@@ -1,8 +1,8 @@
 ﻿using Avalonia.Media.Imaging;
-using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
+using System.Reflection;
 
 namespace TimeLapserdak.ViewModels
 {
@@ -127,6 +127,11 @@ namespace TimeLapserdak.ViewModels
                 this._errorMessage = value; 
                 OnPropertyChanged(nameof(ErrorMessage));
             }
+        }
+
+        public static string VersionNumber
+        {
+            get => Assembly.GetExecutingAssembly()?.GetName().Version?.ToString() ?? "Unknown";
         }
     }
 }
