@@ -61,11 +61,16 @@
 			<local:ImageControl x:Name="StartingImage" ImageSource="{Binding StartingImageBinding}" Margin="3" Grid.Row="1" Grid.Column="0" />
 			<local:ImageControl x:Name="EndingImage" ImageSource="{Binding EndingImageBinding}" Margin="3" Grid.Row="1" Grid.Column="1" />
 		</Grid>
-		<Grid Margin="3" Grid.Row="3" IsEnabled="{Binding !IsBusy, Mode=OneWay}">
-			<Button IsEnabled="{Binding ImagesFolder.Length, Mode=OneWay}"
+		<Grid Margin="3" Grid.Row="3" ColumnDefinitions="Auto,*,Auto" IsEnabled="{Binding !IsBusy, Mode=OneWay}">
+			<StackPanel Orientation="Horizontal" Margin="3">
+				<TextBlock Text="Framerate:" VerticalAlignment="Center" Margin="0,0,3,0" />
+				<ComboBox x:Name="FRCB" ItemsSource="{Binding Framerates}" SelectedItem="{Binding SelectedFramerate}" Width="90" />
+			</StackPanel>
+			<Button Grid.Column="2"
+				    IsEnabled="{Binding ImagesFolder.Length, Mode=OneWay}"
 					Content="Generate"
 					ClickMode="Press" Click="GenerateClick"
-					Width="90"
+					Width="150"
 					HorizontalAlignment="Center" HorizontalContentAlignment="Center" />
 		</Grid>
 		<ProgressBar Margin="3" Height="24" FontWeight="DemiBold" Background="Aqua" Grid.Row="4" LargeChange="1" 
