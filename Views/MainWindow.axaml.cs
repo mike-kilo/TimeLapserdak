@@ -116,7 +116,7 @@ insufficient space or missing folder.";
                 ImageProcessing.CreateFrames(tmpFiles) is IEnumerable<BitmapVideoFrameWrapper> frames)
             {
                 ImageProcessing.ProgressChangedEvent += this.VideoGenerateProgressChanged;
-                var convertedMessage = await ImageProcessing.GenerateVideo(frames, 25, Path.GetDirectoryName(dc.InputFilesList[0].FullName) ?? Path.GetTempPath());
+                var convertedMessage = await ImageProcessing.GenerateVideo(frames, dc.SelectedFramerate, Path.GetDirectoryName(dc.InputFilesList[0].FullName) ?? Path.GetTempPath());
                 ImageProcessing.ProgressChangedEvent -= this.VideoGenerateProgressChanged;
                 if (string.IsNullOrEmpty(convertedMessage)) Directory.Delete(tempFolder, true);
                 if(convertedMessage.Length > 0) dc.ErrorMessage = convertedMessage;

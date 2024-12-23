@@ -1,4 +1,6 @@
 ﻿using Avalonia.Media.Imaging;
+using CommunityToolkit.Mvvm.ComponentModel;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
@@ -9,11 +11,16 @@ namespace TimeLapserdak.ViewModels
     public partial class MainWindowViewModel : ViewModelBase, INotifyPropertyChanged
     {
         //public event PropertyChangedEventHandler? PropertyChanged;
-        
+
         //protected virtual void OnPropertyChanged([CallerMemberName] string?  propertyName = null)
         //{
         //    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         //}
+
+        public static List<double> Framerates 
+        {
+            get => [25.0, 30.0, 50.0, 60.0, 100.0, 120.0];
+        }
 
         public string Greeting { get; } = "Welcome to Avalonia!";
 
@@ -133,5 +140,8 @@ namespace TimeLapserdak.ViewModels
         {
             get => Assembly.GetExecutingAssembly()?.GetName().Version?.ToString() ?? "Unknown";
         }
+
+        [ObservableProperty]
+        private double selectedFramerate = Framerates[0];
     }
 }
