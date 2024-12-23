@@ -61,12 +61,16 @@
 			<local:ImageControl x:Name="StartingImage" ImageSource="{Binding StartingImageBinding}" Margin="3" Grid.Row="1" Grid.Column="0" />
 			<local:ImageControl x:Name="EndingImage" ImageSource="{Binding EndingImageBinding}" Margin="3" Grid.Row="1" Grid.Column="1" />
 		</Grid>
-		<Grid Margin="3" Grid.Row="3" ColumnDefinitions="Auto,*,Auto" IsEnabled="{Binding !IsBusy, Mode=OneWay}">
-			<StackPanel Orientation="Horizontal" Margin="3">
+		<Grid Margin="3" Grid.Row="3" ColumnDefinitions="Auto,5,Auto,5,Auto,*,Auto" IsEnabled="{Binding !IsBusy, Mode=OneWay}">
+			<CheckBox Grid.Column="0" Content="Lock crop position" IsChecked="{Binding IsCropPositionLocked}" Margin="3"  />
+			<Rectangle Grid.Column="1" VerticalAlignment="Stretch" Width="1" Margin="3" Stroke="Gray" StrokeThickness="1" />
+			<CheckBox Grid.Column="2" Content="Lock crop size" IsChecked="{Binding IsCropSizeLocked}" Margin="3"  />
+			<Rectangle Grid.Column="3" VerticalAlignment="Stretch" Width="1" Margin="3" Stroke="Gray" StrokeThickness="1" />
+			<StackPanel Grid.Column="4" Orientation="Horizontal" Margin="3">
 				<TextBlock Text="Framerate:" VerticalAlignment="Center" Margin="0,0,3,0" />
 				<ComboBox x:Name="FRCB" ItemsSource="{Binding Framerates}" SelectedItem="{Binding SelectedFramerate}" Width="90" />
 			</StackPanel>
-			<Button Grid.Column="2"
+			<Button Grid.Column="6"
 				    IsEnabled="{Binding ImagesFolder.Length, Mode=OneWay}"
 					Content="Generate"
 					ClickMode="Press" Click="GenerateClick"
