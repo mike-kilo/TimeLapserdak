@@ -99,6 +99,24 @@ public partial class ImageControl : UserControl
     public static readonly StyledProperty<bool> IsMainProperty =
         AvaloniaProperty.Register<ImageControl, bool>(nameof(IsMain), defaultValue: false);
 
+    public bool IsCropSizeLocked
+    {
+        get { return (bool)GetValue(IsCropSizeLockedProperty); }
+        set { SetValue(IsCropSizeLockedProperty, value); }
+    }
+
+    public static readonly StyledProperty<bool> IsCropSizeLockedProperty =
+        AvaloniaProperty.Register<ImageControl, bool>(nameof(IsCropSizeLocked), defaultValue: false);
+
+    public bool IsCropPositionLocked
+    {
+        get { return (bool)GetValue(IsCropPositionLockedProperty); }
+        set { SetValue(IsCropPositionLockedProperty, value); }
+    }
+
+    public static readonly StyledProperty<bool> IsCropPositionLockedProperty =
+        AvaloniaProperty.Register<ImageControl, bool>(nameof(IsCropPositionLocked), defaultValue: false);
+
     #endregion Properties
 
     public Image? TheImageControl { get; private set; }
@@ -161,10 +179,10 @@ public partial class ImageControl : UserControl
         Cursor = Cursor.Default;
         if (0 <= pos.X - this.OriginX && pos.X - this.OriginX <= this.CropWidth)
         {
-            if (Math.Abs(pos.Y - this.OriginY - this.CropHeight) <= 10) 
+            if ((this.IsMain || !this.IsCropSizeLocked) && (Math.Abs(pos.Y - this.OriginY - this.CropHeight) <= 10))
                 this.Cursor = new Cursor(StandardCursorType.SizeNorthSouth);
-            else if 
-                (0 <= pos.Y - this.OriginY && pos.Y - this.OriginY <= this.CropHeight) this.Cursor = new Cursor(StandardCursorType.SizeAll);
+            else if ((this.IsMain || !this.IsCropPositionLocked) && (0 <= pos.Y - this.OriginY && pos.Y - this.OriginY <= this.CropHeight))
+                this.Cursor = new Cursor(StandardCursorType.SizeAll);
         }
 
         if (this._currentMouseAction == MouseMoveAction.Move)

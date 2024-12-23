@@ -58,8 +58,12 @@
 		<Grid Grid.Row="2" ColumnDefinitions="*,*" RowDefinitions="Auto,*" IsEnabled="{Binding !IsBusy, Mode=OneWay}" >
 			<TextBlock Text="Starting image" Margin="3" />
 			<TextBlock Text="Ending image" Margin="3" Grid.Column="1" />
-			<local:ImageControl x:Name="StartingImage" IsMain="True" ImageSource="{Binding StartingImageBinding}" Margin="3" Grid.Row="1" Grid.Column="0" />
-			<local:ImageControl x:Name="EndingImage" ImageSource="{Binding EndingImageBinding}" Margin="3" Grid.Row="1" Grid.Column="1" />
+			<local:ImageControl x:Name="StartingImage" IsMain="True" IsCropPositionLocked="{Binding IsCropPositionLocked}" IsCropSizeLocked="{Binding IsCropSizeLocked}"
+								ImageSource="{Binding StartingImageBinding}" 
+								Margin="3" Grid.Row="1" Grid.Column="0" />
+			<local:ImageControl x:Name="EndingImage" IsCropPositionLocked="{Binding IsCropPositionLocked}" IsCropSizeLocked="{Binding IsCropSizeLocked}"
+								ImageSource="{Binding EndingImageBinding}" 
+								Margin="3" Grid.Row="1" Grid.Column="1" />
 		</Grid>
 		<Grid Margin="3" Grid.Row="3" ColumnDefinitions="Auto,5,Auto,5,Auto,*,Auto" IsEnabled="{Binding !IsBusy, Mode=OneWay}">
 			<CheckBox Grid.Column="0" Content="Lock crop position" IsChecked="{Binding IsCropPositionLocked}" Margin="3"  />
