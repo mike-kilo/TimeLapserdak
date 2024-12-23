@@ -17,7 +17,7 @@ namespace TimeLapserdak.ViewModels
         //    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         //}
 
-        public static List<double> Framerates 
+        public static List<double> Framerates
         {
             get => [25.0, 30.0, 50.0, 60.0, 100.0, 120.0];
         }
@@ -25,14 +25,14 @@ namespace TimeLapserdak.ViewModels
         public string Greeting { get; } = "Welcome to Avalonia!";
 
         private string _imagesFolder = string.Empty;
-        public string ImagesFolder 
-        { 
-            get => _imagesFolder; 
+        public string ImagesFolder
+        {
+            get => _imagesFolder;
             set
             {
                 _imagesFolder = value;
                 OnPropertyChanged(nameof(ImagesFolder));
-            } 
+            }
         }
 
         private ObservableCollection<FileInfo> _inputFilesList = [];
@@ -40,20 +40,20 @@ namespace TimeLapserdak.ViewModels
         public ObservableCollection<FileInfo> InputFilesList
         {
             get => this._inputFilesList;
-            set 
-            { 
-                this._inputFilesList = value; 
+            set
+            {
+                this._inputFilesList = value;
                 OnPropertyChanged(nameof(InputFilesList));
             }
         }
 
         private Bitmap? _startingImageBinding;
-        
-        public Bitmap? StartingImageBinding 
+
+        public Bitmap? StartingImageBinding
         {
             get => this._startingImageBinding;
-            set 
-            { 
+            set
+            {
                 this._startingImageBinding = value;
                 OnPropertyChanged(nameof(StartingImageBinding));
             }
@@ -75,10 +75,10 @@ namespace TimeLapserdak.ViewModels
 
         public int PicturesProgress
         {
-            get => this._picturesProgress; 
-            set 
-            { 
-                this._picturesProgress = value; 
+            get => this._picturesProgress;
+            set
+            {
+                this._picturesProgress = value;
                 OnPropertyChanged(nameof(PicturesProgress));
             }
         }
@@ -88,9 +88,9 @@ namespace TimeLapserdak.ViewModels
         public bool IsBusy
         {
             get => this._isBusy;
-            set 
-            { 
-                this._isBusy = value; 
+            set
+            {
+                this._isBusy = value;
                 OnPropertyChanged(nameof(IsBusy));
             }
         }
@@ -100,8 +100,8 @@ namespace TimeLapserdak.ViewModels
         public bool IsVideoConverting
         {
             get => _isVideoConverting;
-            set 
-            { 
+            set
+            {
                 this._isVideoConverting = value;
                 OnPropertyChanged(nameof(IsVideoConverting));
             }
@@ -129,9 +129,9 @@ namespace TimeLapserdak.ViewModels
         public string ErrorMessage
         {
             get => this._errorMessage;
-            set 
-            { 
-                this._errorMessage = value; 
+            set
+            {
+                this._errorMessage = value;
                 OnPropertyChanged(nameof(ErrorMessage));
             }
         }
@@ -143,5 +143,11 @@ namespace TimeLapserdak.ViewModels
 
         [ObservableProperty]
         private double selectedFramerate = Framerates[0];
+
+        [ObservableProperty]
+        private bool isCropPositionLocked = false;
+
+        [ObservableProperty]
+        private bool isCropSizeLocked = false;
     }
 }

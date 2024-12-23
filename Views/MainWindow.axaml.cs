@@ -68,11 +68,11 @@ namespace TimeLapserdak.Views
             var endingCrop = this._endingImageControl.CroppingBox ?? new PixelRect();
 
             if (this.DataContext is not MainWindowViewModel dc) return;
-            dc.IsBusy = true;
-            dc.IsVideoConverting = true;
-
             dc.PicturesProgress = 0;
             dc.VideoProgress = 0;
+
+            dc.IsBusy = true;
+            dc.IsVideoConverting = true;
 
             var picsCount = dc.InputFilesList.Count;
             var positionStep = (endingCrop.Position - startingCrop.Position).ToPoint(picsCount);

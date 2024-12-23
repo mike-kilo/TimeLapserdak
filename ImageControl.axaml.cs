@@ -2,8 +2,11 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace TimeLapserdak;
 
@@ -16,6 +19,8 @@ public partial class ImageControl : UserControl
         Move,
     }
 
+    private static readonly List<ImageControl> _instances = [];
+
     #region Properties
 
     public static double ImageAspectRatio => 16.0 / 9.0;
@@ -27,7 +32,12 @@ public partial class ImageControl : UserControl
     public double OriginX
     {
         get => (double)GetValue(OriginXProperty);
-        set => SetValue(OriginXProperty, value);
+        set
+        {
+            SetValue(OriginXProperty, value);
+            if (this.IsMain && this.IsCropPositionLocked) _instances.Where(x => !x.IsMain).ToList().ForEach(i => i.OriginX = this.OriginX);
+            this.IsCropPositionConsistent = this.IsCropPositionConsistent;
+        }
     }
 
     public static readonly StyledProperty<double> OriginXProperty =
@@ -36,7 +46,12 @@ public partial class ImageControl : UserControl
     public double OriginY
     {
         get => (double)GetValue(OriginYProperty);
-        set => SetValue(OriginYProperty, value);
+        set
+        {
+            SetValue(OriginYProperty, value);
+            if (this.IsMain && this.IsCropPositionLocked) _instances.Where(x => !x.IsMain).ToList().ForEach(i => i.OriginY = this.OriginY);
+            this.IsCropPositionConsistent = this.IsCropPositionConsistent;
+        }
     }
 
     public static readonly StyledProperty<double> OriginYProperty =
@@ -54,7 +69,12 @@ public partial class ImageControl : UserControl
     public double CropHeight
     {
         get => (double)GetValue(CropHeightProperty);
-        set => SetValue(CropHeightProperty, value);
+        set
+        {
+            SetValue(CropHeightProperty, value);
+            if (this.IsMain && this.IsCropSizeLocked) _instances.Where(x => !x.IsMain).ToList().ForEach(i => i.CropHeight = this.CropHeight);
+            this.IsCropSizeConsistent = this.IsCropSizeConsistent;
+        }
     }
 
     public static readonly StyledProperty<double> CropHeightProperty =
@@ -85,6 +105,51 @@ public partial class ImageControl : UserControl
     public static readonly StyledProperty<PixelRect?> CroppingBoxProperty =
         AvaloniaProperty.Register<ImageControl, PixelRect?>(nameof(CroppingBox), defaultValue: null, defaultBindingMode: BindingMode.OneWay);
 
+    public bool IsMain
+    {
+        get { return (bool)GetValue(IsMainProperty); }
+        set { SetValue(IsMainProperty, value); }
+    }
+
+    public static readonly StyledProperty<bool> IsMainProperty =
+        AvaloniaProperty.Register<ImageControl, bool>(nameof(IsMain), defaultValue: false);
+
+    public bool IsCropSizeLocked
+    {
+        get { return (bool)GetValue(IsCropSizeLockedProperty); }
+        set { SetValue(IsCropSizeLockedProperty, value); }
+    }
+
+    public static readonly StyledProperty<bool> IsCropSizeLockedProperty =
+        AvaloniaProperty.Register<ImageControl, bool>(nameof(IsCropSizeLocked), defaultValue: false);
+
+    public bool IsCropPositionLocked
+    {
+        get { return (bool)GetValue(IsCropPositionLockedProperty); }
+        set { SetValue(IsCropPositionLockedProperty, value); }
+    }
+
+    public static readonly StyledProperty<bool> IsCropPositionLockedProperty =
+        AvaloniaProperty.Register<ImageControl, bool>(nameof(IsCropPositionLocked), defaultValue: false);
+
+    public bool IsCropPositionConsistent
+    {
+        get => (this.IsCropPositionLocked && _instances.First(i => i.IsMain) is ImageControl main) ? main.OriginX == this.OriginX && main.OriginY == this.OriginY : true;
+        set { SetValue(IsCropPositionConsistentProperty, value); }
+    }
+
+    public static readonly StyledProperty<bool> IsCropPositionConsistentProperty =
+        AvaloniaProperty.Register<ImageControl, bool>(nameof(IsCropPositionConsistent), defaultValue: true);
+
+    public bool IsCropSizeConsistent
+    {
+        get => (this.IsCropSizeLocked && _instances.First(i => i.IsMain) is ImageControl main) ? main.CropHeight == this.CropHeight : true;
+        set { SetValue(IsCropSizeConsistentProperty, value); }
+    }
+
+    public static readonly StyledProperty<bool> IsCropSizeConsistentProperty =
+        AvaloniaProperty.Register<ImageControl, bool>(nameof(IsCropSizeConsistent), defaultValue: true);
+
     #endregion Properties
 
     public Image? TheImageControl { get; private set; }
@@ -95,6 +160,11 @@ public partial class ImageControl : UserControl
     {
         InitializeComponent();
         this.TheImageControl = this.GetControl<Image>(nameof(TheImage));
+    }
+
+    ~ImageControl() 
+    { 
+        _instances.Remove(this);
     }
 
     #endregion Constructors
@@ -128,6 +198,12 @@ public partial class ImageControl : UserControl
 
     #region Event handlers
 
+    public void ControlLoaded(object sender, RoutedEventArgs args)
+    {
+        this.IsMain = this.IsMain && !_instances.Any(i => i.IsMain);
+        _instances.Add(this);
+    }
+
     public void MouseHoverOverImage(object sender, PointerEventArgs args)
     {
         var point = args.GetCurrentPoint(sender as Control);
@@ -136,10 +212,10 @@ public partial class ImageControl : UserControl
         Cursor = Cursor.Default;
         if (0 <= pos.X - this.OriginX && pos.X - this.OriginX <= this.CropWidth)
         {
-            if (Math.Abs(pos.Y - this.OriginY - this.CropHeight) <= 10) 
+            if ((this.IsMain || !this.IsCropSizeLocked) && (Math.Abs(pos.Y - this.OriginY - this.CropHeight) <= 10))
                 this.Cursor = new Cursor(StandardCursorType.SizeNorthSouth);
-            else if 
-                (0 <= pos.Y - this.OriginY && pos.Y - this.OriginY <= this.CropHeight) this.Cursor = new Cursor(StandardCursorType.SizeAll);
+            else if ((this.IsMain || !this.IsCropPositionLocked) && (0 <= pos.Y - this.OriginY && pos.Y - this.OriginY <= this.CropHeight))
+                this.Cursor = new Cursor(StandardCursorType.SizeAll);
         }
 
         if (this._currentMouseAction == MouseMoveAction.Move)
