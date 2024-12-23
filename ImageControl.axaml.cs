@@ -32,7 +32,11 @@ public partial class ImageControl : UserControl
     public double OriginX
     {
         get => (double)GetValue(OriginXProperty);
-        set => SetValue(OriginXProperty, value);
+        set
+        {
+            SetValue(OriginXProperty, value);
+            if (this.IsMain && this.IsCropPositionLocked) _instances.Where(x => !x.IsMain).ToList().ForEach(i => i.OriginX = this.OriginX);
+        }
     }
 
     public static readonly StyledProperty<double> OriginXProperty =
@@ -41,7 +45,11 @@ public partial class ImageControl : UserControl
     public double OriginY
     {
         get => (double)GetValue(OriginYProperty);
-        set => SetValue(OriginYProperty, value);
+        set
+        {
+            SetValue(OriginYProperty, value);
+            if (this.IsMain && this.IsCropPositionLocked) _instances.Where(x => !x.IsMain).ToList().ForEach(i => i.OriginY = this.OriginY);
+        }
     }
 
     public static readonly StyledProperty<double> OriginYProperty =
@@ -59,7 +67,11 @@ public partial class ImageControl : UserControl
     public double CropHeight
     {
         get => (double)GetValue(CropHeightProperty);
-        set => SetValue(CropHeightProperty, value);
+        set
+        {
+            SetValue(CropHeightProperty, value);
+            if (this.IsMain && this.IsCropSizeLocked) _instances.Where(x => !x.IsMain).ToList().ForEach(i => i.CropHeight = this.CropHeight);
+        }
     }
 
     public static readonly StyledProperty<double> CropHeightProperty =
