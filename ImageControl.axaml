@@ -20,9 +20,9 @@
 			</Grid>
 		</Border>
 		<Grid Grid.Row="1" ColumnDefinitions="*, *, *, 5*">
-			<TextBlock Grid.Column="0" Text="{Binding OriginX, StringFormat=X: {0}}" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Left" />
-			<TextBlock Grid.Column="1" Text="{Binding OriginY, StringFormat=Y: {0}}" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Left" />
-			<TextBlock Grid.Column="2" Text="{Binding CropHeight, StringFormat=Height: {0}}" Margin="3" VerticalAlignment="Center" />
+			<TextBlock Grid.Column="0" Text="{Binding OriginX, RelativeSource={RelativeSource AncestorType=UserControl}, StringFormat=X: {0}}" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Left" />
+			<TextBlock Grid.Column="1" Text="{Binding OriginY, RelativeSource={RelativeSource AncestorType=UserControl}, StringFormat=Y: {0}}" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Left" />
+			<TextBlock Grid.Column="2" Text="{Binding CropHeight, RelativeSource={RelativeSource AncestorType=UserControl}, StringFormat=Height: {0}}" Margin="3" VerticalAlignment="Center" />
 		</Grid>
 	</Grid>
 </UserControl>
