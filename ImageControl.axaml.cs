@@ -21,8 +21,8 @@ public partial class ImageControl : UserControl
     public static double ImageAspectRatio => 16.0 / 9.0;
 
     private MouseMoveAction _currentMouseAction = MouseMoveAction.None;
-    private PointerPoint _initialClickPoint = new PointerPoint();
-    private Point _onClickParam = new Point();
+    private PointerPoint _initialClickPoint = new();
+    private Point _onClickParam = new();
 
     public double OriginX
     {
@@ -131,7 +131,6 @@ public partial class ImageControl : UserControl
     public void MouseHoverOverImage(object sender, PointerEventArgs args)
     {
         var point = args.GetCurrentPoint(sender as Control);
-        var intrPoints = args.GetIntermediatePoints(sender as Control);   
         var pos = point.Position;
 
         Cursor = Cursor.Default;
