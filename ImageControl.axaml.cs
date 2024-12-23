@@ -36,6 +36,7 @@ public partial class ImageControl : UserControl
         {
             SetValue(OriginXProperty, value);
             if (this.IsMain && this.IsCropPositionLocked) _instances.Where(x => !x.IsMain).ToList().ForEach(i => i.OriginX = this.OriginX);
+            this.IsCropPositionConsistent = this.IsCropPositionConsistent;
         }
     }
 
@@ -49,6 +50,7 @@ public partial class ImageControl : UserControl
         {
             SetValue(OriginYProperty, value);
             if (this.IsMain && this.IsCropPositionLocked) _instances.Where(x => !x.IsMain).ToList().ForEach(i => i.OriginY = this.OriginY);
+            this.IsCropPositionConsistent = this.IsCropPositionConsistent;
         }
     }
 
@@ -71,6 +73,7 @@ public partial class ImageControl : UserControl
         {
             SetValue(CropHeightProperty, value);
             if (this.IsMain && this.IsCropSizeLocked) _instances.Where(x => !x.IsMain).ToList().ForEach(i => i.CropHeight = this.CropHeight);
+            this.IsCropSizeConsistent = this.IsCropSizeConsistent;
         }
     }
 
@@ -128,6 +131,24 @@ public partial class ImageControl : UserControl
 
     public static readonly StyledProperty<bool> IsCropPositionLockedProperty =
         AvaloniaProperty.Register<ImageControl, bool>(nameof(IsCropPositionLocked), defaultValue: false);
+
+    public bool IsCropPositionConsistent
+    {
+        get => (this.IsCropPositionLocked && _instances.First(i => i.IsMain) is ImageControl main) ? main.OriginX == this.OriginX && main.OriginY == this.OriginY : true;
+        set { SetValue(IsCropPositionConsistentProperty, value); }
+    }
+
+    public static readonly StyledProperty<bool> IsCropPositionConsistentProperty =
+        AvaloniaProperty.Register<ImageControl, bool>(nameof(IsCropPositionConsistent), defaultValue: true);
+
+    public bool IsCropSizeConsistent
+    {
+        get => (this.IsCropSizeLocked && _instances.First(i => i.IsMain) is ImageControl main) ? main.CropHeight == this.CropHeight : true;
+        set { SetValue(IsCropSizeConsistentProperty, value); }
+    }
+
+    public static readonly StyledProperty<bool> IsCropSizeConsistentProperty =
+        AvaloniaProperty.Register<ImageControl, bool>(nameof(IsCropSizeConsistent), defaultValue: true);
 
     #endregion Properties
 
