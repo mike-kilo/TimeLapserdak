@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="350"
              x:Class="TimeLapserdak.ImageControl"
-			 x:CompileBindings="False">
+			 x:CompileBindings="False" Loaded="ControlLoaded">
 	<Grid RowDefinitions="*,Auto">
 		<Border ClipToBounds="True" BorderBrush="DarkGray" BorderThickness="1" Background="LightYellow">
 			<Grid>

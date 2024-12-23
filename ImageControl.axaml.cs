@@ -2,8 +2,11 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace TimeLapserdak;
 
@@ -15,6 +18,8 @@ public partial class ImageControl : UserControl
         Resize,
         Move,
     }
+
+    private static readonly List<ImageControl> _instances = [];
 
     #region Properties
 
@@ -85,6 +90,15 @@ public partial class ImageControl : UserControl
     public static readonly StyledProperty<PixelRect?> CroppingBoxProperty =
         AvaloniaProperty.Register<ImageControl, PixelRect?>(nameof(CroppingBox), defaultValue: null, defaultBindingMode: BindingMode.OneWay);
 
+    public bool IsMain
+    {
+        get { return (bool)GetValue(IsMainProperty); }
+        set { SetValue(IsMainProperty, value); }
+    }
+
+    public static readonly StyledProperty<bool> IsMainProperty =
+        AvaloniaProperty.Register<ImageControl, bool>(nameof(IsMain), defaultValue: false);
+
     #endregion Properties
 
     public Image? TheImageControl { get; private set; }
@@ -95,6 +109,11 @@ public partial class ImageControl : UserControl
     {
         InitializeComponent();
         this.TheImageControl = this.GetControl<Image>(nameof(TheImage));
+    }
+
+    ~ImageControl() 
+    { 
+        _instances.Remove(this);
     }
 
     #endregion Constructors
@@ -127,6 +146,12 @@ public partial class ImageControl : UserControl
     #endregion Coerce methods
 
     #region Event handlers
+
+    public void ControlLoaded(object sender, RoutedEventArgs args)
+    {
+        this.IsMain = this.IsMain && !_instances.Any(i => i.IsMain);
+        _instances.Add(this);
+    }
 
     public void MouseHoverOverImage(object sender, PointerEventArgs args)
     {
