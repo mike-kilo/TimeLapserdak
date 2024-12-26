@@ -79,7 +79,7 @@ namespace TimeLapserdak
                             .WithConstantRateFactor(20)
                             .WithFastStart()
                             .WithSpeedPreset(Speed.Slow)
-                            .WithCustomArgument("-pix_fmt yuv420p")
+                            .ForcePixelFormat("yuv420p")
                             .WithFramerate(frameRate))
                     .NotifyOnProgress(progressHandler, TimeSpan.FromSeconds(1.0 * frames.Count() / frameRate))
                     .ProcessAsynchronously(throwOnError: true);
