@@ -63,7 +63,9 @@ namespace TimeLapserdak
             try
             {
                 success = await FFMpegArguments
-                    .FromPipeInput(source)
+                    .FromPipeInput(source,
+                        options => options
+                            .WithHardwareAcceleration(HardwareAccelerationDevice.Auto))
                     .OutputToFile(
                         Path.Combine(outputFolder, "TimeLapserdak." + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".mp4"),
                         overwrite: true,
