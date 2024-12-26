@@ -57,8 +57,11 @@ namespace TimeLapserdak
         {
             Action<double> progressHandler = new(p => ProgressChangedEvent?.Invoke(null, p));
 
-            RawVideoPipeSource source = new(frames) { FrameRate = frameRate };
+            RawVideoPipeSource source = null;
             bool success = false;
+            await Task.Run(() => source = new(frames) { FrameRate = frameRate });
+            if (source is null) return "Encountered a problem with creating video frames";
+
             string errorMessage = string.Empty;
             try
             {
