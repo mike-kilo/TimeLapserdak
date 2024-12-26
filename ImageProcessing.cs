@@ -75,7 +75,7 @@ namespace TimeLapserdak
                             .WithFramerate(frameRate)
                             .WithSpeedPreset(Speed.UltraFast))
                     .NotifyOnProgress(progressHandler, TimeSpan.FromSeconds(1.0 * frames.Count() / frameRate))
-                    .ProcessAsynchronously(throwOnError: false);
+                    .ProcessAsynchronously(throwOnError: true);
             }
             catch (Exception ex)
             {
@@ -83,8 +83,9 @@ namespace TimeLapserdak
                 errorMessage = ex.Message;
             }
 
-            if (!success) errorMessage = @"Generating the video was unsuccessful due to an unknown reason.
-Check your FFMpeg settings and try again.
+            if (!success) errorMessage = @"Generating the video was unsuccessful:" + Environment.NewLine +
+                    errorMessage + Environment.NewLine +
+@"Check your FFMpeg settings and try again.
 If the problem persists, contact the developer.";
 
             return errorMessage;
