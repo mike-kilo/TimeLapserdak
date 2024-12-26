@@ -72,13 +72,15 @@ namespace TimeLapserdak
                     .OutputToFile(
                         Path.Combine(outputFolder, "TimeLapserdak." + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".mp4"),
                         overwrite: true,
-                        options => options.WithVideoCodec(VideoCodec.LibX264)
+                        options => options
+                            .WithVideoCodec(VideoCodec.LibX264)
                             .UsingMultithreading(true)
-                            .WithConstantRateFactor(28)
-                            .WithVariableBitrate(5)
+                            .WithBitStreamFilter(Channel.Video, Filter.H264_Mp4ToAnnexB)
+                            .WithConstantRateFactor(20)
                             .WithFastStart()
-                            .WithFramerate(frameRate)
-                            .WithSpeedPreset(Speed.UltraFast))
+                            .WithSpeedPreset(Speed.Slow)
+                            .WithCustomArgument("-pix_fmt yuv420p")
+                            .WithFramerate(frameRate))
                     .NotifyOnProgress(progressHandler, TimeSpan.FromSeconds(1.0 * frames.Count() / frameRate))
                     .ProcessAsynchronously(throwOnError: true);
             }
