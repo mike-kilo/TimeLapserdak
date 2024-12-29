@@ -53,29 +53,41 @@ namespace TimeLapserdak
 
         public static event EventHandler<double> ProgressChangedEvent = null!;
 
-        public static async Task<string> GenerateVideo(IEnumerable<IVideoFrame> frames, double frameRate, string outputFolder)
+        public static async Task<RawVideoPipeSource?> GenerateVideoPipeSource(IEnumerable<IVideoFrame> frames, double frameRate)
         {
-            Action<double> progressHandler = new(p => ProgressChangedEvent?.Invoke(null, p));
+            if (frames is null || !frames.Any()) return null;
+            RawVideoPipeSource? source = null;
+            await Task.Run(() => source = new(frames) { FrameRate = frameRate });
+            return source;
+        }
 
-            RawVideoPipeSource source = new(frames) { FrameRate = frameRate };
+        public static async Task<string> GenerateVideo(RawVideoPipeSource pipeSource, string outputFolder, int framesCount = 0)
+        {
+            Action<double> progressHandler = new(p => { if (framesCount > 0) ProgressChangedEvent?.Invoke(null, p); });
+
             bool success = false;
+
             string errorMessage = string.Empty;
             try
             {
                 success = await FFMpegArguments
-                    .FromPipeInput(source)
+                    .FromPipeInput(pipeSource,
+                        options => options
+                            .WithHardwareAcceleration(HardwareAccelerationDevice.Auto))
                     .OutputToFile(
                         Path.Combine(outputFolder, "TimeLapserdak." + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".mp4"),
                         overwrite: true,
-                        options => options.WithVideoCodec(VideoCodec.LibX264)
+                        options => options
+                            .WithVideoCodec(VideoCodec.LibX264)
                             .UsingMultithreading(true)
-                            .WithConstantRateFactor(28)
-                            .WithVariableBitrate(5)
+                            .WithBitStreamFilter(Channel.Video, Filter.H264_Mp4ToAnnexB)
+                            .WithConstantRateFactor(20)
                             .WithFastStart()
-                            .WithFramerate(frameRate)
-                            .WithSpeedPreset(Speed.UltraFast))
-                    .NotifyOnProgress(progressHandler, TimeSpan.FromSeconds(1.0 * frames.Count() / frameRate))
-                    .ProcessAsynchronously(throwOnError: false);
+                            .WithSpeedPreset(Speed.Slow)
+                            .ForcePixelFormat("yuv420p")
+                            .WithFramerate(pipeSource.FrameRate))
+                    .NotifyOnProgress(progressHandler, TimeSpan.FromSeconds(1.0 * framesCount / pipeSource.FrameRate))
+                    .ProcessAsynchronously(throwOnError: true);
             }
             catch (Exception ex)
             {
@@ -83,8 +95,9 @@ namespace TimeLapserdak
                 errorMessage = ex.Message;
             }
 
-            if (!success) errorMessage = @"Generating the video was unsuccessful due to an unknown reason.
-Check your FFMpeg settings and try again.
+            if (!success) errorMessage = @"Generating the video was unsuccessful:" + Environment.NewLine +
+                    errorMessage + Environment.NewLine +
+@"Check your FFMpeg settings and try again.
 If the problem persists, contact the developer.";
 
             return errorMessage;

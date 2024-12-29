@@ -112,15 +112,19 @@ with storage (hard drive) access,
 insufficient space or missing folder.";
 
             if (ImageProcessing.IsFFMpegAvailable() && 
-                (Directory.GetFiles(tempFolder, "*.jpg", SearchOption.TopDirectoryOnly).Select(f => new FileInfo(f)).ToList() is List<FileInfo> tmpFiles) &&
-                ImageProcessing.CreateFrames(tmpFiles) is IEnumerable<BitmapVideoFrameWrapper> frames)
+                (Directory.GetFiles(tempFolder, "*.jpg", SearchOption.TopDirectoryOnly).Select(f => new FileInfo(f)).ToList() is List<FileInfo> tmpFiles))
             {
                 ImageProcessing.ProgressChangedEvent += this.VideoGenerateProgressChanged;
-                var convertedMessage = await ImageProcessing.GenerateVideo(frames, dc.SelectedFramerate, Path.GetDirectoryName(dc.InputFilesList[0].FullName) ?? Path.GetTempPath());
-                ImageProcessing.ProgressChangedEvent -= this.VideoGenerateProgressChanged;
-                if (string.IsNullOrEmpty(convertedMessage)) Directory.Delete(tempFolder, true);
-                if(convertedMessage.Length > 0) dc.ErrorMessage = convertedMessage;
-                dc.VideoProgress = 100;
+                var pipeSource = await ImageProcessing.GenerateVideoPipeSource(ImageProcessing.CreateFrames(tmpFiles), dc.SelectedFramerate);
+                if (pipeSource is null) dc.ErrorMessage = "Encountered a problem in generating source from frames";
+                if (pipeSource is not null)
+                {
+                    var convertedMessage = await ImageProcessing.GenerateVideo(pipeSource, Path.GetDirectoryName(dc.InputFilesList[0].FullName) ?? Path.GetTempPath(), tmpFiles.Count());
+                    ImageProcessing.ProgressChangedEvent -= this.VideoGenerateProgressChanged;
+                    if (string.IsNullOrEmpty(convertedMessage)) Directory.Delete(tempFolder, true);
+                    if (convertedMessage.Length > 0) dc.ErrorMessage = convertedMessage;
+                    dc.VideoProgress = 100;
+                }
             }
             
             dc.IsVideoConverting = false;
