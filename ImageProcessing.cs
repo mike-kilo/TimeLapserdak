@@ -55,6 +55,7 @@ namespace TimeLapserdak
 
         public static async Task<RawVideoPipeSource?> GenerateVideoPipeSource(IEnumerable<IVideoFrame> frames, double frameRate)
         {
+            if (frames is null || !frames.Any()) return null;
             RawVideoPipeSource? source = null;
             await Task.Run(() => source = new(frames) { FrameRate = frameRate });
             return source;
