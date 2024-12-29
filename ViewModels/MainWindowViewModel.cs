@@ -19,7 +19,7 @@ namespace TimeLapserdak.ViewModels
 
         public static List<double> Framerates
         {
-            get => [25.0, 30.0, 50.0, 60.0, 100.0, 120.0];
+            get => [1.0, 2.0, 5.0, 25.0, 30.0, 50.0, 60.0, 100.0, 120.0];
         }
 
         public string Greeting { get; } = "Welcome to Avalonia!";
@@ -142,7 +142,7 @@ namespace TimeLapserdak.ViewModels
         }
 
         [ObservableProperty]
-        private double selectedFramerate = Framerates[0];
+        private double selectedFramerate = Framerates[3];
 
         [ObservableProperty]
         private bool isCropPositionLocked = false;
