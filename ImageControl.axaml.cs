@@ -160,6 +160,9 @@ public partial class ImageControl : UserControl
     {
         InitializeComponent();
         this.TheImageControl = this.GetControl<Image>(nameof(TheImage));
+
+        IsCropPositionLockedProperty.Changed.AddClassHandler<ImageControl>(CropSizePositionLockedChanged);
+        IsCropSizeLockedProperty.Changed.AddClassHandler<ImageControl>(CropSizePositionLockedChanged);
     }
 
     ~ImageControl() 
@@ -192,6 +195,14 @@ public partial class ImageControl : UserControl
         var height = Math.Min(Math.Max(10, value), Math.Min((ic.TheImageControl?.DesiredSize.Height ?? 0) - ic.OriginY, ((ic.TheImageControl?.DesiredSize.Width ?? 0) - ic.OriginX) / ImageAspectRatio));
         ic.CropWidth = height * ImageAspectRatio;
         return height;
+    }
+
+    private void RecoerceCroppingFrame()
+    {
+        this.OriginX = this.OriginX;
+        this.OriginY = this.OriginY;
+        this.CropHeight = this.CropHeight;
+        this.CropWidth = this.CropWidth;
     }
 
     #endregion Coerce methods
@@ -259,10 +270,12 @@ public partial class ImageControl : UserControl
 
     public void ImageSizeChanged(object sender, SizeChangedEventArgs args)
     {
-        this.OriginX = this.OriginX;
-        this.OriginY = this.OriginY;
-        this.CropHeight = this.CropHeight;
-        this.CropWidth = this.CropWidth;
+        this.RecoerceCroppingFrame();
+    }
+
+    private static void CropSizePositionLockedChanged(ImageControl sender, AvaloniaPropertyChangedEventArgs e)
+    {
+        if (((bool?)e.NewValue ?? false) && sender.IsMain) sender.RecoerceCroppingFrame();
     }
 
     #endregion Event handlers
