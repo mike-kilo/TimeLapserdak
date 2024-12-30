@@ -134,7 +134,7 @@ public partial class ImageControl : UserControl
 
     public bool IsCropPositionConsistent
     {
-        get => (this.IsCropPositionLocked && _instances.First(i => i.IsMain) is ImageControl main) ? main.OriginX == this.OriginX && main.OriginY == this.OriginY : true;
+        get => !this.IsCropPositionLocked || _instances.First(i => i.IsMain) is not ImageControl main || main.OriginX == this.OriginX && main.OriginY == this.OriginY;
         set { SetValue(IsCropPositionConsistentProperty, value); }
     }
 
@@ -143,7 +143,7 @@ public partial class ImageControl : UserControl
 
     public bool IsCropSizeConsistent
     {
-        get => (this.IsCropSizeLocked && _instances.First(i => i.IsMain) is ImageControl main) ? main.CropHeight == this.CropHeight : true;
+        get => !this.IsCropSizeLocked || _instances.First(i => i.IsMain) is not ImageControl main || main.CropHeight == this.CropHeight;
         set { SetValue(IsCropSizeConsistentProperty, value); }
     }
 
