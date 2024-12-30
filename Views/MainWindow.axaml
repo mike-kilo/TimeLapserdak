@@ -1,4 +1,4 @@
-<Window xmlns="https://github.com/avaloniaui"
+﻿<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:TimeLapserdak.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -65,16 +65,21 @@
 								ImageSource="{Binding EndingImageBinding}" 
 								Margin="3" Grid.Row="1" Grid.Column="1" />
 		</Grid>
-		<Grid Margin="3" Grid.Row="3" ColumnDefinitions="Auto,5,Auto,5,Auto,*,Auto" IsEnabled="{Binding !IsBusy, Mode=OneWay}">
+		<Grid Margin="3" Grid.Row="3" ColumnDefinitions="Auto,5,Auto,5,Auto,5,Auto,*,Auto" IsEnabled="{Binding !IsBusy, Mode=OneWay}">
 			<CheckBox Grid.Column="0" Content="Lock crop position" IsChecked="{Binding IsCropPositionLocked}" Margin="3"  />
 			<Rectangle Grid.Column="1" VerticalAlignment="Stretch" Width="1" Margin="3" Stroke="Gray" StrokeThickness="1" />
 			<CheckBox Grid.Column="2" Content="Lock crop size" IsChecked="{Binding IsCropSizeLocked}" Margin="3"  />
 			<Rectangle Grid.Column="3" VerticalAlignment="Stretch" Width="1" Margin="3" Stroke="Gray" StrokeThickness="1" />
 			<StackPanel Grid.Column="4" Orientation="Horizontal" Margin="3">
+				<TextBlock Text="Orientation:" VerticalAlignment="Center" Margin="0,0,3,0" />
+				<ComboBox ItemsSource="{Binding Orientations}" SelectedItem="{Binding CropOrientation}" Width="120" />
+			</StackPanel>
+			<Rectangle Grid.Column="5" VerticalAlignment="Stretch" Width="1" Margin="3" Stroke="Gray" StrokeThickness="1" />
+			<StackPanel Grid.Column="6" Orientation="Horizontal" Margin="3">
 				<TextBlock Text="Framerate:" VerticalAlignment="Center" Margin="0,0,3,0" />
 				<ComboBox ItemsSource="{Binding Framerates}" SelectedItem="{Binding SelectedFramerate}" Width="90" />
 			</StackPanel>
-			<Button Grid.Column="6"
+			<Button Grid.Column="8"
 				    IsEnabled="{Binding ImagesFolder.Length, Mode=OneWay}"
 					Content="Generate"
 					ClickMode="Press" Click="GenerateClick"

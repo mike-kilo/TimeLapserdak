@@ -1,5 +1,6 @@
 ﻿using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -20,6 +21,13 @@ namespace TimeLapserdak.ViewModels
         public static List<double> Framerates
         {
             get => [1.0, 2.0, 5.0, 25.0, 30.0, 50.0, 60.0, 100.0, 120.0];
+        }
+
+        public enum Orientation
+        {
+            Landscape,
+            Square,
+            Portrait,
         }
 
         public string Greeting { get; } = "Welcome to Avalonia!";
@@ -149,5 +157,11 @@ namespace TimeLapserdak.ViewModels
 
         [ObservableProperty]
         private bool isCropSizeLocked = false;
+
+        [ObservableProperty]
+        private List<Orientation> orientations = new(Enum.GetValues<Orientation>());
+
+        [ObservableProperty]
+        private Orientation cropOrientation = Orientation.Landscape;
     }
 }
