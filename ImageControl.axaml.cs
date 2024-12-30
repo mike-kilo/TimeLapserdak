@@ -172,24 +172,24 @@ public partial class ImageControl : UserControl
     #region Coerce methods
 
     public static double OriginXCoerce(AvaloniaObject o, double value) =>
-        (o is ImageControl ic) ? 
-        Math.Min(Math.Max(0, value), (ic.TheImageControl?.DesiredSize.Width ?? 0) - ic.CropWidth) : 
+        (o is ImageControl ic) ?
+        Math.Max(0, Math.Min(value, (ic.TheImageControl?.DesiredSize.Width ?? 0) - ic.CropWidth)) : 
         value;
 
     public static double OriginYCoerce(AvaloniaObject o, double value) => 
-        (o is ImageControl ic) ? 
-        Math.Min(Math.Max(0, value), (ic.TheImageControl?.DesiredSize.Height ?? 0) - ic.CropHeight) : 
+        (o is ImageControl ic) ?
+        Math.Max(0, Math.Min( value, (ic.TheImageControl?.DesiredSize.Height ?? 0) - ic.CropHeight)) : 
         value;
 
     public static double CropWidthCoerce(AvaloniaObject o, double value) =>
         (o is ImageControl ic) ?
-        Math.Min(Math.Max(0, value), (ic.TheImageControl?.DesiredSize.Width ?? 0) - ic.OriginX) :
+        Math.Min(Math.Max(10, value), (ic.TheImageControl?.DesiredSize.Width ?? 0) - ic.OriginX) :
         value;
 
     public static double CropHeightCoerce(AvaloniaObject o, double value)
     {
         if (o is not ImageControl ic) return value;
-        var height = Math.Min(Math.Max(0, value), Math.Min((ic.TheImageControl?.DesiredSize.Height ?? 0) - ic.OriginY, ((ic.TheImageControl?.DesiredSize.Width ?? 0) - ic.OriginX) / ImageAspectRatio));
+        var height = Math.Min(Math.Max(10, value), Math.Min((ic.TheImageControl?.DesiredSize.Height ?? 0) - ic.OriginY, ((ic.TheImageControl?.DesiredSize.Width ?? 0) - ic.OriginX) / ImageAspectRatio));
         ic.CropWidth = height * ImageAspectRatio;
         return height;
     }
@@ -261,6 +261,8 @@ public partial class ImageControl : UserControl
     {
         this.OriginX = this.OriginX;
         this.OriginY = this.OriginY;
+        this.CropHeight = this.CropHeight;
+        this.CropWidth = this.CropWidth;
     }
 
     #endregion Event handlers
