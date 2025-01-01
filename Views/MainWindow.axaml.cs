@@ -77,11 +77,12 @@ namespace TimeLapserdak.Views
             var picsCount = dc.InputFilesList.Count;
             var positionStep = (endingCrop.Position - startingCrop.Position).ToPoint(picsCount);
             var sizeStep = new PixelSize(endingCrop.Width - startingCrop.Width, endingCrop.Height - startingCrop.Height).ToSize(picsCount);
+            var cropOrientation = ImageControl.CroppingBoxOrientation;
             List<PixelRect> crops = Enumerable.Range(0, picsCount)
                 .Select(n => new PixelRect(
                     startingCrop.Position + PixelPoint.FromPoint(positionStep, n),
                     PixelSize.FromSize(new Size(
-                        (startingCrop.Height + sizeStep.Height * n) * ImageControl.ImageAspectRatio,
+                        (startingCrop.Height + sizeStep.Height * n) * cropOrientation.ToAspectRatio(),
                         startingCrop.Height + sizeStep.Height * n), 1.0)))
                 .ToList();
 
@@ -100,7 +101,7 @@ namespace TimeLapserdak.Views
             {
                 Parallel.ForEach(dc.InputFilesList.Zip(crops, (f, c) => new { File = f, Crop = c }).ToList(), (i) =>
                 {
-                    if (ImageProcessing.CropAndResizePicture(i.File, i.Crop, tempFolder))
+                    if (ImageProcessing.CropAndResizePicture(i.File, i.Crop, tempFolder, cropOrientation))
                         Dispatcher.UIThread.Invoke(() => dc.PicturesProgress++);
                 });
             });

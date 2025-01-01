@@ -23,8 +23,6 @@ public partial class ImageControl : UserControl
 
     #region Properties
 
-    public static double ImageAspectRatio => 16.0 / 9.0;
-
     private MouseMoveAction _currentMouseAction = MouseMoveAction.None;
     private PointerPoint _initialClickPoint = new();
     private Point _onClickParam = new();
