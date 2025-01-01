@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Reflection;
+using static TimeLapserdak.Enums;
 
 namespace TimeLapserdak.ViewModels
 {
@@ -21,13 +22,6 @@ namespace TimeLapserdak.ViewModels
         public static List<double> Framerates
         {
             get => [1.0, 2.0, 5.0, 25.0, 30.0, 50.0, 60.0, 100.0, 120.0];
-        }
-
-        public enum Orientation
-        {
-            Landscape,
-            Square,
-            Portrait,
         }
 
         public string Greeting { get; } = "Welcome to Avalonia!";
