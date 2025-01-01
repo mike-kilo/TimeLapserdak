@@ -4,12 +4,12 @@ using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
-using FFMpegCore.Extensions.SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using TimeLapserdak.Helpers;
 using TimeLapserdak.ViewModels;
 
 namespace TimeLapserdak.Views

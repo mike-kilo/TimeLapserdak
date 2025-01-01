@@ -1,6 +1,6 @@
 ﻿using SkiaSharp;
 
-namespace TimeLapserdak
+namespace TimeLapserdak.Helpers
 {
     public static class Enums
     {
@@ -35,7 +35,7 @@ namespace TimeLapserdak
 
         public static string ToFFMpegAspect(this Orientation orientation)
         {
-            return orientation switch 
+            return orientation switch
             {
                 Orientation.Landscape => "16:9",
                 Orientation.Square => "1:1",
