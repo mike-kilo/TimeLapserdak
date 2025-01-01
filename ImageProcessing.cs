@@ -15,7 +15,7 @@ namespace TimeLapserdak
 {
     public static class ImageProcessing
     {
-        public static bool CropAndResizePicture(FileInfo file, PixelRect crop, string outputFolder)
+        public static bool CropAndResizePicture(FileInfo file, PixelRect crop, string outputFolder, Enums.Orientation orientation = Enums.Orientation.Landscape)
         {
             using var bitmap = SKBitmap.Decode(file.FullName);
             if (bitmap is null) return false;
@@ -25,7 +25,7 @@ namespace TimeLapserdak
             using var croppedBitmap = new SKBitmap(new SKImageInfo(crop.Width, crop.Height));
             if (!bitmap.ExtractSubset(croppedBitmap, cropRect)) return false;
                 
-            using var outputBitmap = new SKBitmap(new SKImageInfo(1920, 1080));
+            using var outputBitmap = new SKBitmap(orientation.ToBitmapSize());
             if (!croppedBitmap.ScalePixels(outputBitmap, SKFilterQuality.High)) return false;
                 
             using var data = outputBitmap.Encode(SKEncodedImageFormat.Jpeg, 95);
