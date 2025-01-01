@@ -23,8 +23,6 @@ public partial class ImageControl : UserControl
 
     #region Properties
 
-    public static double ImageAspectRatio => 16.0 / 9.0;
-
     private MouseMoveAction _currentMouseAction = MouseMoveAction.None;
     private PointerPoint _initialClickPoint = new();
     private Point _onClickParam = new();
@@ -98,12 +96,26 @@ public partial class ImageControl : UserControl
 
             return new PixelRect(
                 new PixelPoint((int)Math.Round(scale.X * this.OriginX), (int)Math.Round(scale.Y * this.OriginY)), 
-                new PixelSize((int)Math.Floor(scale.Y * this.CropHeight * ImageAspectRatio), (int)Math.Floor(scale.Y * this.CropHeight)));
+                new PixelSize((int)Math.Floor(scale.Y * this.CropHeight * ImageOrientation.ToAspectRatio()), (int)Math.Floor(scale.Y * this.CropHeight)));
         }
     }
 
     public static readonly StyledProperty<PixelRect?> CroppingBoxProperty =
         AvaloniaProperty.Register<ImageControl, PixelRect?>(nameof(CroppingBox), defaultValue: null, defaultBindingMode: BindingMode.OneWay);
+
+    public Enums.Orientation ImageOrientation
+    {
+        get { return GetValue(ImageOrientationProperty); }
+        set { SetValue(ImageOrientationProperty, value); }
+    }
+
+    public static readonly StyledProperty<Enums.Orientation> ImageOrientationProperty =
+        AvaloniaProperty.Register<ImageControl, Enums.Orientation>(nameof(ImageOrientation), defaultValue: Enums.Orientation.Landscape);
+
+    public static Enums.Orientation CroppingBoxOrientation
+    {
+        get => _instances.Where(i => i.IsMain)?.First().ImageOrientation ?? Enums.Orientation.Landscape;
+    }
 
     public bool IsMain
     {
@@ -134,7 +146,7 @@ public partial class ImageControl : UserControl
 
     public bool IsCropPositionConsistent
     {
-        get => (this.IsCropPositionLocked && _instances.First(i => i.IsMain) is ImageControl main) ? main.OriginX == this.OriginX && main.OriginY == this.OriginY : true;
+        get => !this.IsCropPositionLocked || _instances.First(i => i.IsMain) is not ImageControl main || main.OriginX == this.OriginX && main.OriginY == this.OriginY;
         set { SetValue(IsCropPositionConsistentProperty, value); }
     }
 
@@ -143,7 +155,7 @@ public partial class ImageControl : UserControl
 
     public bool IsCropSizeConsistent
     {
-        get => (this.IsCropSizeLocked && _instances.First(i => i.IsMain) is ImageControl main) ? main.CropHeight == this.CropHeight : true;
+        get => !this.IsCropSizeLocked || _instances.First(i => i.IsMain) is not ImageControl main || main.CropHeight == this.CropHeight;
         set { SetValue(IsCropSizeConsistentProperty, value); }
     }
 
@@ -160,6 +172,10 @@ public partial class ImageControl : UserControl
     {
         InitializeComponent();
         this.TheImageControl = this.GetControl<Image>(nameof(TheImage));
+
+        IsCropPositionLockedProperty.Changed.AddClassHandler<ImageControl>(CropSizePositionLockedChanged);
+        IsCropSizeLockedProperty.Changed.AddClassHandler<ImageControl>(CropSizePositionLockedChanged);
+        ImageOrientationProperty.Changed.AddClassHandler<ImageControl>(CropOrientationChanged);
     }
 
     ~ImageControl() 
@@ -172,26 +188,34 @@ public partial class ImageControl : UserControl
     #region Coerce methods
 
     public static double OriginXCoerce(AvaloniaObject o, double value) =>
-        (o is ImageControl ic) ? 
-        Math.Min(Math.Max(0, value), (ic.TheImageControl?.DesiredSize.Width ?? 0) - ic.CropWidth) : 
+        (o is ImageControl ic) ?
+        Math.Max(0, Math.Min(value, (ic.TheImageControl?.DesiredSize.Width ?? 0) - ic.CropWidth)) : 
         value;
 
     public static double OriginYCoerce(AvaloniaObject o, double value) => 
-        (o is ImageControl ic) ? 
-        Math.Min(Math.Max(0, value), (ic.TheImageControl?.DesiredSize.Height ?? 0) - ic.CropHeight) : 
+        (o is ImageControl ic) ?
+        Math.Max(0, Math.Min( value, (ic.TheImageControl?.DesiredSize.Height ?? 0) - ic.CropHeight)) : 
         value;
 
     public static double CropWidthCoerce(AvaloniaObject o, double value) =>
         (o is ImageControl ic) ?
-        Math.Min(Math.Max(0, value), (ic.TheImageControl?.DesiredSize.Width ?? 0) - ic.OriginX) :
+        Math.Min(Math.Max(10, value), (ic.TheImageControl?.DesiredSize.Width ?? 0) - ic.OriginX) :
         value;
 
     public static double CropHeightCoerce(AvaloniaObject o, double value)
     {
         if (o is not ImageControl ic) return value;
-        var height = Math.Min(Math.Max(0, value), Math.Min((ic.TheImageControl?.DesiredSize.Height ?? 0) - ic.OriginY, ((ic.TheImageControl?.DesiredSize.Width ?? 0) - ic.OriginX) / ImageAspectRatio));
-        ic.CropWidth = height * ImageAspectRatio;
+        var height = Math.Min(Math.Max(10, value), Math.Min((ic.TheImageControl?.DesiredSize.Height ?? 0) - ic.OriginY, ((ic.TheImageControl?.DesiredSize.Width ?? 0) - ic.OriginX) / ic.ImageOrientation.ToAspectRatio()));
+        ic.CropWidth = height * ic.ImageOrientation.ToAspectRatio();
         return height;
+    }
+
+    private void RecoerceCroppingFrame()
+    {
+        this.OriginX = this.OriginX;
+        this.OriginY = this.OriginY;
+        this.CropHeight = this.CropHeight;
+        this.CropWidth = this.CropWidth;
     }
 
     #endregion Coerce methods
@@ -259,8 +283,16 @@ public partial class ImageControl : UserControl
 
     public void ImageSizeChanged(object sender, SizeChangedEventArgs args)
     {
-        this.OriginX = this.OriginX;
-        this.OriginY = this.OriginY;
+        this.RecoerceCroppingFrame();
+    }
+
+    private static void CropSizePositionLockedChanged(ImageControl sender, AvaloniaPropertyChangedEventArgs e)
+    {
+        if (((bool?)e.NewValue ?? false) && sender.IsMain) sender.RecoerceCroppingFrame();
+    }
+    private static void CropOrientationChanged(ImageControl sender, AvaloniaPropertyChangedEventArgs e)
+    {
+       sender.RecoerceCroppingFrame();
     }
 
     #endregion Event handlers

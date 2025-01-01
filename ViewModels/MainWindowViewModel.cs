@@ -1,10 +1,12 @@
 ﻿using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Reflection;
+using static TimeLapserdak.Enums;
 
 namespace TimeLapserdak.ViewModels
 {
@@ -149,5 +151,11 @@ namespace TimeLapserdak.ViewModels
 
         [ObservableProperty]
         private bool isCropSizeLocked = false;
+
+        [ObservableProperty]
+        private List<Orientation> orientations = new(Enum.GetValues<Orientation>());
+
+        [ObservableProperty]
+        private Orientation cropOrientation = Orientation.Landscape;
     }
 }
