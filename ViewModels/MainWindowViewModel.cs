@@ -6,7 +6,8 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Reflection;
-using static TimeLapserdak.Enums;
+using TimeLapserdak.Helpers;
+using static TimeLapserdak.Helpers.Enums;
 
 namespace TimeLapserdak.ViewModels
 {

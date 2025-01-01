@@ -7,6 +7,7 @@ using Avalonia.Media.Imaging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TimeLapserdak.Helpers;
 
 namespace TimeLapserdak.Views;
 
