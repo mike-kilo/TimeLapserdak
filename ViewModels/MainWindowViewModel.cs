@@ -27,117 +27,37 @@ namespace TimeLapserdak.ViewModels
 
         public string Greeting { get; } = "Welcome to Avalonia!";
 
-        private string _imagesFolder = string.Empty;
-        public string ImagesFolder
-        {
-            get => _imagesFolder;
-            set
-            {
-                _imagesFolder = value;
-                OnPropertyChanged(nameof(ImagesFolder));
-            }
-        }
+        [ObservableProperty]
+        private string imagesFolder = string.Empty;
 
-        private ObservableCollection<FileInfo> _inputFilesList = [];
+        [ObservableProperty]
+        private ObservableCollection<FileInfo> inputFilesList = [];
 
-        public ObservableCollection<FileInfo> InputFilesList
-        {
-            get => this._inputFilesList;
-            set
-            {
-                this._inputFilesList = value;
-                OnPropertyChanged(nameof(InputFilesList));
-            }
-        }
+        [ObservableProperty]
+        private Bitmap? startingImageBinding;
 
-        private Bitmap? _startingImageBinding;
+        [ObservableProperty]
+        private Bitmap? endingImageBinding;
 
-        public Bitmap? StartingImageBinding
-        {
-            get => this._startingImageBinding;
-            set
-            {
-                this._startingImageBinding = value;
-                OnPropertyChanged(nameof(StartingImageBinding));
-            }
-        }
+        [ObservableProperty]
+        private int picturesProgress = 0;
 
-        private Bitmap? _endingImageBinding;
+        [ObservableProperty]
+        private bool isBusy;
 
-        public Bitmap? EndingImageBinding
-        {
-            get => this._endingImageBinding;
-            set
-            {
-                this._endingImageBinding = value;
-                OnPropertyChanged(nameof(EndingImageBinding));
-            }
-        }
+        [ObservableProperty]
+        private bool isVideoConverting;
 
-        private int _picturesProgress = 0;
-
-        public int PicturesProgress
-        {
-            get => this._picturesProgress;
-            set
-            {
-                this._picturesProgress = value;
-                OnPropertyChanged(nameof(PicturesProgress));
-            }
-        }
-
-        private bool _isBusy;
-
-        public bool IsBusy
-        {
-            get => this._isBusy;
-            set
-            {
-                this._isBusy = value;
-                OnPropertyChanged(nameof(IsBusy));
-            }
-        }
-
-        private bool _isVideoConverting;
-
-        public bool IsVideoConverting
-        {
-            get => _isVideoConverting;
-            set
-            {
-                this._isVideoConverting = value;
-                OnPropertyChanged(nameof(IsVideoConverting));
-            }
-        }
-
-        private double _videoProgress = 0;
-
-        public double VideoProgress
-        {
-            get => this._videoProgress;
-            set
-            {
-                this._videoProgress = value;
-                OnPropertyChanged(nameof(VideoProgress));
-            }
-        }
+        [ObservableProperty]
+        private double videoProgress = 0;
 
         public static bool IsFFMpegAvailable
         {
             get => ImageProcessing.IsFFMpegAvailable();
         }
 
-        private string _errorMessage = string.Empty;
-
-        public string ErrorMessage
-        {
-            get => this._errorMessage;
-            set
-            {
-                this._errorMessage = value;
-                OnPropertyChanged(nameof(ErrorMessage));
-            }
-        }
+        [ObservableProperty]
+        private string errorMessage = string.Empty;
 
         public static string VersionNumber
         {
