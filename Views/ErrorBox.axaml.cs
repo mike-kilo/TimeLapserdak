@@ -2,7 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 
-namespace TimeLapserdak;
+namespace TimeLapserdak.Views;
 
 public partial class ErrorBox : UserControl
 {
