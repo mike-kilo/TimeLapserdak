@@ -13,15 +13,6 @@ namespace TimeLapserdak.ViewModels
 {
     public partial class MainWindowViewModel : ViewModelBase, INotifyPropertyChanged
     {
-        //public event PropertyChangedEventHandler? PropertyChanged;
-
-        //protected virtual void OnPropertyChanged([CallerMemberName] string?  propertyName = null)
-        //{
-        //    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        //}
-
-        public string Greeting { get; } = "Welcome to Avalonia!";
-
         public static List<double> Framerates { get; } = [1.0, 2.0, 5.0, 25.0, 30.0, 50.0, 60.0, 100.0, 120.0];
 
         public static bool IsFFMpegAvailable { get; } = ImageProcessing.IsFFMpegAvailable();
