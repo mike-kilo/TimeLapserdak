@@ -59,9 +59,11 @@
 			<TextBlock Text="Starting image" Margin="3" />
 			<TextBlock Text="Ending image" Margin="3" Grid.Column="1" />
 			<local:ImageControl x:Name="StartingImage" IsMain="True" IsCropPositionLocked="{Binding IsCropPositionLocked}" IsCropSizeLocked="{Binding IsCropSizeLocked}"
+								ImageOrientation="{Binding CropOrientation}"
 								ImageSource="{Binding StartingImageBinding}" 
 								Margin="3" Grid.Row="1" Grid.Column="0" />
 			<local:ImageControl x:Name="EndingImage" IsCropPositionLocked="{Binding IsCropPositionLocked}" IsCropSizeLocked="{Binding IsCropSizeLocked}"
+								ImageOrientation="{Binding CropOrientation}"
 								ImageSource="{Binding EndingImageBinding}" 
 								Margin="3" Grid.Row="1" Grid.Column="1" />
 		</Grid>

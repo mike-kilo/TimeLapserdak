@@ -98,12 +98,26 @@ public partial class ImageControl : UserControl
 
             return new PixelRect(
                 new PixelPoint((int)Math.Round(scale.X * this.OriginX), (int)Math.Round(scale.Y * this.OriginY)), 
-                new PixelSize((int)Math.Floor(scale.Y * this.CropHeight * ImageAspectRatio), (int)Math.Floor(scale.Y * this.CropHeight)));
+                new PixelSize((int)Math.Floor(scale.Y * this.CropHeight * ImageOrientation.ToAspectRatio()), (int)Math.Floor(scale.Y * this.CropHeight)));
         }
     }
 
     public static readonly StyledProperty<PixelRect?> CroppingBoxProperty =
         AvaloniaProperty.Register<ImageControl, PixelRect?>(nameof(CroppingBox), defaultValue: null, defaultBindingMode: BindingMode.OneWay);
+
+    public Enums.Orientation ImageOrientation
+    {
+        get { return GetValue(ImageOrientationProperty); }
+        set { SetValue(ImageOrientationProperty, value); }
+    }
+
+    public static readonly StyledProperty<Enums.Orientation> ImageOrientationProperty =
+        AvaloniaProperty.Register<ImageControl, Enums.Orientation>(nameof(ImageOrientation), defaultValue: Enums.Orientation.Landscape);
+
+    public static Enums.Orientation CroppingBoxOrientation
+    {
+        get => _instances.Where(i => i.IsMain)?.First().ImageOrientation ?? Enums.Orientation.Landscape;
+    }
 
     public bool IsMain
     {
@@ -163,6 +177,7 @@ public partial class ImageControl : UserControl
 
         IsCropPositionLockedProperty.Changed.AddClassHandler<ImageControl>(CropSizePositionLockedChanged);
         IsCropSizeLockedProperty.Changed.AddClassHandler<ImageControl>(CropSizePositionLockedChanged);
+        ImageOrientationProperty.Changed.AddClassHandler<ImageControl>(CropOrientationChanged);
     }
 
     ~ImageControl() 
@@ -192,8 +207,8 @@ public partial class ImageControl : UserControl
     public static double CropHeightCoerce(AvaloniaObject o, double value)
     {
         if (o is not ImageControl ic) return value;
-        var height = Math.Min(Math.Max(10, value), Math.Min((ic.TheImageControl?.DesiredSize.Height ?? 0) - ic.OriginY, ((ic.TheImageControl?.DesiredSize.Width ?? 0) - ic.OriginX) / ImageAspectRatio));
-        ic.CropWidth = height * ImageAspectRatio;
+        var height = Math.Min(Math.Max(10, value), Math.Min((ic.TheImageControl?.DesiredSize.Height ?? 0) - ic.OriginY, ((ic.TheImageControl?.DesiredSize.Width ?? 0) - ic.OriginX) / ic.ImageOrientation.ToAspectRatio()));
+        ic.CropWidth = height * ic.ImageOrientation.ToAspectRatio();
         return height;
     }
 
@@ -276,6 +291,10 @@ public partial class ImageControl : UserControl
     private static void CropSizePositionLockedChanged(ImageControl sender, AvaloniaPropertyChangedEventArgs e)
     {
         if (((bool?)e.NewValue ?? false) && sender.IsMain) sender.RecoerceCroppingFrame();
+    }
+    private static void CropOrientationChanged(ImageControl sender, AvaloniaPropertyChangedEventArgs e)
+    {
+       sender.RecoerceCroppingFrame();
     }
 
     #endregion Event handlers
