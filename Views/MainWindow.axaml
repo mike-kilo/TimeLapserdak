@@ -1,8 +1,9 @@
-﻿<Window xmlns="https://github.com/avaloniaui"
+<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:TimeLapserdak.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:views="clr-namespace:TimeLapserdak.Views;assembly=TimeLapserdak"
 		xmlns:local="clr-namespace:TimeLapserdak;assembly=TimeLapserdak"
         mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="450"
         x:Class="TimeLapserdak.Views.MainWindow"
@@ -58,11 +59,11 @@
 		<Grid Grid.Row="2" ColumnDefinitions="*,*" RowDefinitions="Auto,*" IsEnabled="{Binding !IsBusy, Mode=OneWay}" >
 			<TextBlock Text="Starting image" Margin="3" />
 			<TextBlock Text="Ending image" Margin="3" Grid.Column="1" />
-			<local:ImageControl x:Name="StartingImage" IsMain="True" IsCropPositionLocked="{Binding IsCropPositionLocked}" IsCropSizeLocked="{Binding IsCropSizeLocked}"
+			<views:ImageControl x:Name="StartingImage" IsMain="True" IsCropPositionLocked="{Binding IsCropPositionLocked}" IsCropSizeLocked="{Binding IsCropSizeLocked}"
 								ImageOrientation="{Binding CropOrientation}"
 								ImageSource="{Binding StartingImageBinding}" 
 								Margin="3" Grid.Row="1" Grid.Column="0" />
-			<local:ImageControl x:Name="EndingImage" IsCropPositionLocked="{Binding IsCropPositionLocked}" IsCropSizeLocked="{Binding IsCropSizeLocked}"
+			<views:ImageControl x:Name="EndingImage" IsCropPositionLocked="{Binding IsCropPositionLocked}" IsCropSizeLocked="{Binding IsCropSizeLocked}"
 								ImageOrientation="{Binding CropOrientation}"
 								ImageSource="{Binding EndingImageBinding}" 
 								Margin="3" Grid.Row="1" Grid.Column="1" />

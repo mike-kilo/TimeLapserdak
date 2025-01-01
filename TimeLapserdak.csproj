@@ -43,7 +43,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="ImageControl.axaml.cs">
+    <Compile Update="Views\ImageControl.axaml.cs">
       <DependentUpon>ImageControl.axaml</DependentUpon>
     </Compile>
   </ItemGroup>
