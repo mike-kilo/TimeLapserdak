@@ -61,7 +61,7 @@ namespace TimeLapserdak
             return source;
         }
 
-        public static async Task<string> GenerateVideo(RawVideoPipeSource pipeSource, string outputFolder, int framesCount = 0)
+        public static async Task<string> GenerateVideo(RawVideoPipeSource pipeSource, string outputFolder, int framesCount = 0, Enums.Orientation orientation = Enums.Orientation.Landscape)
         {
             Action<double> progressHandler = new(p => { if (framesCount > 0) ProgressChangedEvent?.Invoke(null, p); });
 
@@ -85,6 +85,7 @@ namespace TimeLapserdak
                             .WithFastStart()
                             .WithSpeedPreset(Speed.Slow)
                             .ForcePixelFormat("yuv420p")
+                            .WithCustomArgument("-aspect " + orientation.ToFFMpegAspect())
                             .WithFramerate(pipeSource.FrameRate))
                     .NotifyOnProgress(progressHandler, TimeSpan.FromSeconds(1.0 * framesCount / pipeSource.FrameRate))
                     .ProcessAsynchronously(throwOnError: true);

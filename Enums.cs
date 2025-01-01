@@ -32,5 +32,16 @@ namespace TimeLapserdak
                 _ => new SKImageInfo(1920, 1080),
             };
         }
+
+        public static string ToFFMpegAspect(this Orientation orientation)
+        {
+            return orientation switch 
+            {
+                Orientation.Landscape => "16:9",
+                Orientation.Square => "1:1",
+                Orientation.Portrait => "9:16",
+                _ => "16:9",
+            };
+        }
     }
 }
