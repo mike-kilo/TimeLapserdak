@@ -20,9 +20,13 @@ namespace TimeLapserdak.ViewModels
         //    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         //}
 
+        public string Greeting { get; } = "Welcome to Avalonia!";
+
         public static List<double> Framerates { get; } = [1.0, 2.0, 5.0, 25.0, 30.0, 50.0, 60.0, 100.0, 120.0];
 
-        public string Greeting { get; } = "Welcome to Avalonia!";
+        public static bool IsFFMpegAvailable { get; } = ImageProcessing.IsFFMpegAvailable();
+
+        public static string VersionNumber { get; } = Assembly.GetExecutingAssembly()?.GetName().Version?.ToString() ?? "Unknown";
 
         [ObservableProperty]
         private string imagesFolder = string.Empty;
@@ -48,12 +52,8 @@ namespace TimeLapserdak.ViewModels
         [ObservableProperty]
         private double videoProgress = 0;
 
-        public static bool IsFFMpegAvailable { get; } = ImageProcessing.IsFFMpegAvailable();
-
         [ObservableProperty]
         private string errorMessage = string.Empty;
-
-        public static string VersionNumber { get; } = Assembly.GetExecutingAssembly()?.GetName().Version?.ToString() ?? "Unknown";
 
         [ObservableProperty]
         private double selectedFramerate = Framerates[3];
