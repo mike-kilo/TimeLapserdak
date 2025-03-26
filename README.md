@@ -7,7 +7,7 @@ The software takes a series of JPEG images (all stored in one folder) and conver
 I came up with an idea of this software when I was struggling with generating time-lapse videos taken as a series of pictures with my GoPro Hero Session 4 action camera (I used commandline to crop/scale the images and then encode them with FFMpeg). And at the same time I wanted to gain some experience with AvaloniaUI.
 
 Current UI looks as this:
-![TimeLapserdak_forest](https://github.com/user-attachments/assets/b2c3f90e-761f-47dc-9dc5-7c48ee16684f)
+![TimeLapserdak 1 0 17](https://github.com/user-attachments/assets/e2a5db74-591f-4f70-9016-2c802cc907ee)
 
 
 You are presented with two pictures - the first one and the last one from the series stored in the selected folder.
@@ -19,9 +19,7 @@ Current status is:
   - it is possible to navigate to the folder and load the pictures
   - it is possible to select the cropping areas of both starting and ending images
   - the software generates intermediate (cropped and scaled to 1920x1080) images
-
-TODO:
-  - generate video from the intermediate pictures
+  - it is possible to set output video orientation (horizontal, square, vertical)
 
 Limitations
   - only 1920x1080 output resolution is currently supported
