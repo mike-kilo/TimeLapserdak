@@ -11,7 +11,7 @@ using static TimeLapserdak.Helpers.Enums;
 
 namespace TimeLapserdak.ViewModels
 {
-    public partial class MainWindowViewModel : ViewModelBase, INotifyPropertyChanged
+    public partial class MainWindowViewModel : ViewModelBase
     {
         public static List<double> Framerates { get; } = [1.0, 2.0, 5.0, 25.0, 30.0, 50.0, 60.0, 100.0, 120.0];
 
