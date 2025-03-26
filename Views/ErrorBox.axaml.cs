@@ -6,14 +6,16 @@ namespace TimeLapserdak.Views;
 
 public partial class ErrorBox : UserControl
 {
+    private string _errorInfo = string.Empty;
+
     public string ErrorInfo
     {
-        get { return GetValue(ErrorInfoProperty); }
-        set { SetValue(ErrorInfoProperty, value); }
+        get => _errorInfo;
+        set => SetAndRaise(ErrorInfoProperty, ref _errorInfo, value);
     }
 
-    public static readonly StyledProperty<string> ErrorInfoProperty =
-        AvaloniaProperty.Register<ErrorBox, string>(nameof(ErrorInfo), defaultValue: string.Empty, defaultBindingMode: Avalonia.Data.BindingMode.OneWay);
+    public static readonly DirectProperty<ErrorBox, string> ErrorInfoProperty =
+        AvaloniaProperty.RegisterDirect<ErrorBox, string>(nameof(ErrorInfo), o => o.ErrorInfo, (o, v) => o.ErrorInfo = v);
 
     public ErrorBox()
     {
