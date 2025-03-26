@@ -1,4 +1,4 @@
-﻿<Window xmlns="https://github.com/avaloniaui"
+<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:TimeLapserdak.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -16,7 +16,8 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 	<Grid ColumnDefinitions="*" RowDefinitions="Auto, Auto, *, Auto, Auto, Auto, Auto">
-		<views:ErrorBox ErrorInfo="{Binding ErrorMessage}" ZIndex="10" Grid.RowSpan="6" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+		<views:ErrorBox ErrorInfo="{Binding ErrorMessage, Mode=TwoWay}" ZIndex="10" Grid.RowSpan="6" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+						IsVisible="{Binding ErrorMessage.Length}" IsHitTestVisible="{Binding ErrorMessage.Length}" />
 		<Border Margin="3" BorderBrush="DarkGray" BorderThickness="1" Background="LightYellow">
 			<Grid ColumnDefinitions="2*,4*,3*">
 				<TextBlock Margin="3" VerticalAlignment="Center" >
@@ -68,7 +69,7 @@
 								ImageSource="{Binding EndingImageBinding}" 
 								Margin="3" Grid.Row="1" Grid.Column="1" />
 		</Grid>
-		<Grid Margin="3" Grid.Row="3" ColumnDefinitions="Auto,5,Auto,5,Auto,5,Auto,*,Auto" IsEnabled="{Binding !IsBusy, Mode=OneWay}">
+		<Grid Margin="3" Grid.Row="3" ColumnDefinitions="Auto,5,Auto,5,Auto,5,Auto,5,Auto,*,Auto" IsEnabled="{Binding !IsBusy, Mode=OneWay}">
 			<CheckBox Grid.Column="0" Content="Lock crop position" IsChecked="{Binding IsCropPositionLocked}" Margin="3"  />
 			<Rectangle Grid.Column="1" VerticalAlignment="Stretch" Width="1" Margin="3" Stroke="Gray" StrokeThickness="1" />
 			<CheckBox Grid.Column="2" Content="Lock crop size" IsChecked="{Binding IsCropSizeLocked}" Margin="3"  />
@@ -82,7 +83,12 @@
 				<TextBlock Text="Framerate:" VerticalAlignment="Center" Margin="0,0,3,0" />
 				<ComboBox ItemsSource="{Binding Framerates}" SelectedItem="{Binding SelectedFramerate}" Width="90" />
 			</StackPanel>
-			<Button Grid.Column="8"
+			<Rectangle Grid.Column="7" VerticalAlignment="Stretch" Width="1" Margin="3" Stroke="Gray" StrokeThickness="1" />
+			<TextBlock Margin="3" Grid.Column="8" Text="{Binding VideoDuration, Mode=OneWay, StringFormat='Video duration: {0:f1} s'}" VerticalAlignment="Center" >
+				<TextBlock.Resources>
+				</TextBlock.Resources>
+			</TextBlock>
+			<Button Grid.Column="10"
 				    IsEnabled="{Binding ImagesFolder.Length, Mode=OneWay}"
 					Content="Generate"
 					ClickMode="Press" Click="GenerateClick"

@@ -3,20 +3,21 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
-    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-    <Version>1.0.16</Version>
+    <Version>1.0.17</Version>
     <PackageIcon>TimeLapserdakIcon.png</PackageIcon>
     <ApplicationIcon>Assets\TimeLapserdak.ico</ApplicationIcon>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PublishSingleFile>true</PublishSingleFile>
     <SelfContained>true</SelfContained>
     <PublishTrimmed>true</PublishTrimmed>
+	<PublishAot Condition="'$(Configuration)' != 'Debug'">true</PublishAot>
     <PublishReadyToRun>true</PublishReadyToRun>
-	<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <TrimMode>link</TrimMode>
+	<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
   </PropertyGroup>
+
   <ItemGroup>
     <Folder Include="Models\" />
     <AvaloniaResource Include="Assets\**" />
