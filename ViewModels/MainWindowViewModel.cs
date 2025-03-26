@@ -60,5 +60,15 @@ namespace TimeLapserdak.ViewModels
 
         [ObservableProperty]
         private Orientation cropOrientation = Orientation.Landscape;
+
+        public double VideoDuration { get => this.InputFilesList.Count / this.SelectedFramerate; }
+
+        partial void OnSelectedFramerateChanged(double value) => OnPropertyChanged(nameof(VideoDuration));
+
+        public MainWindowViewModel() => this.InputFilesList.CollectionChanged += InputFilesChanged;
+
+        ~MainWindowViewModel() => this.InputFilesList.CollectionChanged -= InputFilesChanged;
+        
+        private void InputFilesChanged(object? sender, EventArgs e) => OnPropertyChanged(nameof(VideoDuration));
     }
 }
