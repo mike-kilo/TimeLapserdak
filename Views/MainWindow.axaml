@@ -16,7 +16,8 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 	<Grid ColumnDefinitions="*" RowDefinitions="Auto, Auto, *, Auto, Auto, Auto, Auto">
-		<views:ErrorBox ErrorInfo="{Binding ErrorMessage}" ZIndex="10" Grid.RowSpan="6" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+		<views:ErrorBox ErrorInfo="{Binding ErrorMessage, Mode=TwoWay}" ZIndex="10" Grid.RowSpan="6" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+						IsVisible="{Binding ErrorMessage.Length}" IsHitTestVisible="{Binding ErrorMessage.Length}" />
 		<Border Margin="3" BorderBrush="DarkGray" BorderThickness="1" Background="LightYellow">
 			<Grid ColumnDefinitions="2*,4*,3*">
 				<TextBlock Margin="3" VerticalAlignment="Center" >
