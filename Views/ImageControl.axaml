@@ -6,7 +6,8 @@
              x:Class="TimeLapserdak.Views.ImageControl"
 			 x:CompileBindings="False" Loaded="ControlLoaded">
 	<Grid RowDefinitions="*,Auto">
-		<Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+		<Grid HorizontalAlignment="Center" VerticalAlignment="Center"
+			  IsVisible="{Binding ElementName=TheImage, Path=Source, Converter={x:Static ObjectConverters.IsNotNull}}">
 			<Border BorderBrush="DarkGray" BorderThickness="1" 
 					ClipToBounds="True"
 					ZIndex="10" >
