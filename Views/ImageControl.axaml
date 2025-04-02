@@ -9,7 +9,6 @@
 		<Grid HorizontalAlignment="Center" VerticalAlignment="Center">
 			<Border BorderBrush="DarkGray" BorderThickness="1" 
 					ClipToBounds="True"
-					Width="{Binding ElementName=TheImage, Path=Bounds.Width}" Height="{Binding ElementName=TheImage, Path=Bounds.Height}" 
 					ZIndex="10" >
 				<Rectangle Width="{Binding CropWidth, RelativeSource={RelativeSource AncestorType=UserControl}}" Height="{Binding CropHeight, RelativeSource={RelativeSource AncestorType=UserControl}}}" Stroke="Red" StrokeThickness="1" HorizontalAlignment="Left" VerticalAlignment="Top" IsHitTestVisible="False" >
 					<Rectangle.RenderTransform>
