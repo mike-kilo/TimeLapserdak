@@ -1,4 +1,4 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -31,8 +31,8 @@
 			<TextBlock Grid.Column="1" Text="{Binding $parent[UserControl].OriginY, StringFormat=Y: {0:F1}}" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Left" />
 			<TextBlock Grid.Column="2" Text="{Binding $parent[UserControl].CropHeight, StringFormat=Height: {0:F1}}" Margin="3" VerticalAlignment="Center" />
 			<Grid Grid.Column="4" ColumnDefinitions="*,5,*" IsVisible="{Binding !$parent[UserControl].IsMain}" Margin="3" HorizontalAlignment="Stretch">
-				<TextBlock Grid.Column="0" Text="⚠ Position inconsistent" IsVisible="{Binding !IsCropPositionConsistent, RelativeSource={RelativeSource AncestorType=UserControl}}" />
-				<TextBlock Grid.Column="2" Text="⚠ Size inconsistent" IsVisible="{Binding !IsCropSizeConsistent, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+				<TextBlock Grid.Column="0" Text="⚠ Position inconsistent" IsVisible="{Binding !$parent[UserControl].IsCropPositionConsistent}" />
+				<TextBlock Grid.Column="2" Text="⚠ Size inconsistent" IsVisible="{Binding !$parent[UserControl].IsCropSizeConsistent}"/>
 			</Grid>
 		</Grid>
 	</Grid>
