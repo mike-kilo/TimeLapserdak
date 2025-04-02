@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-    <Version>1.0.17</Version>
+    <Version>1.0.18</Version>
     <PackageIcon>TimeLapserdakIcon.png</PackageIcon>
     <ApplicationIcon>Assets\TimeLapserdak.ico</ApplicationIcon>
     <SelfContained>true</SelfContained>
