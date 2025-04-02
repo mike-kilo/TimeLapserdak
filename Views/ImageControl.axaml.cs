@@ -294,24 +294,20 @@ public partial class ImageControl : UserControl
         if (this._currentMouseAction == MouseMoveAction.Resize) this._onClickParam = new Point(0, this.CropHeight);
     }
 
-    public void MouseButtonReleasedOverImage(object sender, PointerReleasedEventArgs args)
-    {
+    public void MouseButtonReleasedOverImage(object sender, PointerReleasedEventArgs args) => 
         this._currentMouseAction = MouseMoveAction.None;
-    }
 
-    public void ImageSizeChanged(object sender, SizeChangedEventArgs args)
-    {
+    public void ImageSizeChanged(object sender, SizeChangedEventArgs args) =>
         this.RecoerceCroppingFrame();
-    }
 
     private static void CropSizePositionLockedChanged(ImageControl sender, AvaloniaPropertyChangedEventArgs e)
     {
         if (((bool?)e.NewValue ?? false) && sender.IsMain) sender.RecoerceCroppingFrame();
     }
-    private static void CropOrientationChanged(ImageControl sender, AvaloniaPropertyChangedEventArgs e)
-    {
+
+    private static void CropOrientationChanged(ImageControl sender, AvaloniaPropertyChangedEventArgs e) =>
        sender.RecoerceCroppingFrame();
-    }
+
     private static void LockCropPositionChanged(ImageControl sender, AvaloniaPropertyChangedEventArgs e) =>
         sender.RaisePropertyChanged<bool>(IsCropPositionConsistentProperty, false, sender.IsCropPositionConsistent);
 
