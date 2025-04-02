@@ -35,7 +35,7 @@ public partial class ImageControl : UserControl
         {
             SetValue(OriginXProperty, value);
             if (this.IsMain && this.IsCropPositionLocked) _instances.Where(x => !x.IsMain).ToList().ForEach(i => i.OriginX = this.OriginX);
-            this.IsCropPositionConsistent = this.IsCropPositionConsistent;
+            this.RaisePropertyChanged<bool>(IsCropPositionConsistentProperty, false, IsCropPositionConsistent);
         }
     }
 
@@ -49,7 +49,7 @@ public partial class ImageControl : UserControl
         {
             SetValue(OriginYProperty, value);
             if (this.IsMain && this.IsCropPositionLocked) _instances.Where(x => !x.IsMain).ToList().ForEach(i => i.OriginY = this.OriginY);
-            this.IsCropPositionConsistent = this.IsCropPositionConsistent;
+            this.RaisePropertyChanged<bool>(IsCropPositionConsistentProperty, false, IsCropPositionConsistent);
         }
     }
 
@@ -72,7 +72,7 @@ public partial class ImageControl : UserControl
         {
             SetValue(CropHeightProperty, value);
             if (this.IsMain && this.IsCropSizeLocked) _instances.Where(x => !x.IsMain).ToList().ForEach(i => i.CropHeight = this.CropHeight);
-            this.IsCropSizeConsistent = this.IsCropSizeConsistent;
+            this.RaisePropertyChanged<bool>(IsCropSizeConsistentProperty, false, IsCropSizeConsistent);
         }
     }
 
@@ -145,23 +145,38 @@ public partial class ImageControl : UserControl
     public static readonly StyledProperty<bool> IsCropPositionLockedProperty =
         AvaloniaProperty.Register<ImageControl, bool>(nameof(IsCropPositionLocked), defaultValue: false);
 
+
+    /// <summary>
+    /// IsCropPositionConsistent DirectProperty definition
+    /// </summary>
+    public static readonly DirectProperty<ImageControl, bool> IsCropPositionConsistentProperty =
+        AvaloniaProperty.RegisterDirect<ImageControl, bool>(nameof(IsCropPositionConsistent),
+            o => o.IsCropPositionConsistent);
+
+    /// <summary>
+    /// Gets or sets the IsCropPositionConsistent property. This DirectProperty 
+    /// indicates whether the cropping rectangle position is Consistent between the image controls.
+    /// </summary>
     public bool IsCropPositionConsistent
     {
         get => !this.IsCropPositionLocked || _instances.First(i => i.IsMain) is not ImageControl main || main.OriginX == this.OriginX && main.OriginY == this.OriginY;
-        set { SetValue(IsCropPositionConsistentProperty, value); }
     }
 
-    public static readonly StyledProperty<bool> IsCropPositionConsistentProperty =
-        AvaloniaProperty.Register<ImageControl, bool>(nameof(IsCropPositionConsistent), defaultValue: true);
+    /// <summary>
+    /// IsCropSizeConsistent DirectProperty definition
+    /// </summary>
+    public static readonly DirectProperty<ImageControl, bool> IsCropSizeConsistentProperty =
+        AvaloniaProperty.RegisterDirect<ImageControl, bool>(nameof(IsCropSizeConsistent),
+            o => o.IsCropSizeConsistent);
 
+    /// <summary>
+    /// Gets or sets the IsCropSizeConsistent property. This DirectProperty 
+    /// indicates whether the cropping rectangle size is Consistent between the image controls.
+    /// </summary>
     public bool IsCropSizeConsistent
     {
         get => !this.IsCropSizeLocked || _instances.First(i => i.IsMain) is not ImageControl main || main.CropHeight == this.CropHeight;
-        set { SetValue(IsCropSizeConsistentProperty, value); }
     }
-
-    public static readonly StyledProperty<bool> IsCropSizeConsistentProperty =
-        AvaloniaProperty.Register<ImageControl, bool>(nameof(IsCropSizeConsistent), defaultValue: true);
 
     #endregion Properties
 
@@ -177,6 +192,8 @@ public partial class ImageControl : UserControl
         IsCropPositionLockedProperty.Changed.AddClassHandler<ImageControl>(CropSizePositionLockedChanged);
         IsCropSizeLockedProperty.Changed.AddClassHandler<ImageControl>(CropSizePositionLockedChanged);
         ImageOrientationProperty.Changed.AddClassHandler<ImageControl>(CropOrientationChanged);
+        IsCropPositionLockedProperty.Changed.AddClassHandler<ImageControl>(LockCropPositionChanged);
+        IsCropSizeLockedProperty.Changed.AddClassHandler<ImageControl>(LockCropSizeChanged);
     }
 
     ~ImageControl() 
@@ -277,24 +294,25 @@ public partial class ImageControl : UserControl
         if (this._currentMouseAction == MouseMoveAction.Resize) this._onClickParam = new Point(0, this.CropHeight);
     }
 
-    public void MouseButtonReleasedOverImage(object sender, PointerReleasedEventArgs args)
-    {
+    public void MouseButtonReleasedOverImage(object sender, PointerReleasedEventArgs args) => 
         this._currentMouseAction = MouseMoveAction.None;
-    }
 
-    public void ImageSizeChanged(object sender, SizeChangedEventArgs args)
-    {
+    public void ImageSizeChanged(object sender, SizeChangedEventArgs args) =>
         this.RecoerceCroppingFrame();
-    }
 
     private static void CropSizePositionLockedChanged(ImageControl sender, AvaloniaPropertyChangedEventArgs e)
     {
         if (((bool?)e.NewValue ?? false) && sender.IsMain) sender.RecoerceCroppingFrame();
     }
-    private static void CropOrientationChanged(ImageControl sender, AvaloniaPropertyChangedEventArgs e)
-    {
+
+    private static void CropOrientationChanged(ImageControl sender, AvaloniaPropertyChangedEventArgs e) =>
        sender.RecoerceCroppingFrame();
-    }
+
+    private static void LockCropPositionChanged(ImageControl sender, AvaloniaPropertyChangedEventArgs e) =>
+        sender.RaisePropertyChanged<bool>(IsCropPositionConsistentProperty, false, sender.IsCropPositionConsistent);
+
+    private static void LockCropSizeChanged(ImageControl sender, AvaloniaPropertyChangedEventArgs e) => 
+        sender.RaisePropertyChanged<bool>(IsCropSizeConsistentProperty, false, sender.IsCropSizeConsistent);
 
     #endregion Event handlers
 }
