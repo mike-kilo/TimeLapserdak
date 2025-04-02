@@ -192,6 +192,8 @@ public partial class ImageControl : UserControl
         IsCropPositionLockedProperty.Changed.AddClassHandler<ImageControl>(CropSizePositionLockedChanged);
         IsCropSizeLockedProperty.Changed.AddClassHandler<ImageControl>(CropSizePositionLockedChanged);
         ImageOrientationProperty.Changed.AddClassHandler<ImageControl>(CropOrientationChanged);
+        IsCropPositionLockedProperty.Changed.AddClassHandler<ImageControl>(LockCropPositionChanged);
+        IsCropSizeLockedProperty.Changed.AddClassHandler<ImageControl>(LockCropSizeChanged);
     }
 
     ~ImageControl() 
@@ -310,6 +312,11 @@ public partial class ImageControl : UserControl
     {
        sender.RecoerceCroppingFrame();
     }
+    private static void LockCropPositionChanged(ImageControl sender, AvaloniaPropertyChangedEventArgs e) =>
+        sender.RaisePropertyChanged<bool>(IsCropPositionConsistentProperty, false, sender.IsCropPositionConsistent);
+
+    private static void LockCropSizeChanged(ImageControl sender, AvaloniaPropertyChangedEventArgs e) => 
+        sender.RaisePropertyChanged<bool>(IsCropSizeConsistentProperty, false, sender.IsCropSizeConsistent);
 
     #endregion Event handlers
 }
