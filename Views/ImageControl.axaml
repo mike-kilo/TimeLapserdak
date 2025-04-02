@@ -30,7 +30,7 @@
 			<TextBlock Grid.Column="0" Text="{Binding $parent[UserControl].OriginX, StringFormat=X: {0:F1}}" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Left" />
 			<TextBlock Grid.Column="1" Text="{Binding $parent[UserControl].OriginY, StringFormat=Y: {0:F1}}" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Left" />
 			<TextBlock Grid.Column="2" Text="{Binding $parent[UserControl].CropHeight, StringFormat=Height: {0:F1}}" Margin="3" VerticalAlignment="Center" />
-			<Grid Grid.Column="4" ColumnDefinitions="*,5,*" IsVisible="{Binding !IsMain, RelativeSource={RelativeSource AncestorType=UserControl}}" Margin="3" HorizontalAlignment="Stretch">
+			<Grid Grid.Column="4" ColumnDefinitions="*,5,*" IsVisible="{Binding !$parent[UserControl].IsMain}" Margin="3" HorizontalAlignment="Stretch">
 				<TextBlock Grid.Column="0" Text="⚠ Position inconsistent" IsVisible="{Binding !IsCropPositionConsistent, RelativeSource={RelativeSource AncestorType=UserControl}}" />
 				<TextBlock Grid.Column="2" Text="⚠ Size inconsistent" IsVisible="{Binding !IsCropSizeConsistent, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
 			</Grid>
